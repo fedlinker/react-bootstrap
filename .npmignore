@@ -1,0 +1,6 @@
+src/
+.docz/
+gatsby-node.js
+yarn.lock
+doczrc.js
+tsconfig.json
