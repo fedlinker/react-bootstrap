@@ -2,7 +2,7 @@
   "name": "@fedlinker/react-bootstrap",
   "version": "0.1.0",
   "description": "React components of bootstrap design.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "dev": "docz dev",
     "build": "rm -rf ./lib && tsc",
