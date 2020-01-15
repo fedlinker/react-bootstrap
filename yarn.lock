@@ -1277,7 +1277,7 @@
     unist-builder "1.0.4"
     unist-util-visit "2.0.1"
 
-"@mdx-js/react@^1.0.27":
+"@mdx-js/react@^1.0.27", "@mdx-js/react@^1.5.3":
   version "1.5.3"
   resolved "https://registry.npm.taobao.org/@mdx-js/react/download/@mdx-js/react-1.5.3.tgz#e58c458c72b4618f9c8e16d76136e62a6d517515"
   integrity sha1-5YxFjHK0YY+cjhbXYTbmKm1RdRU=

@@ -32,6 +32,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.27",
     "@fedlinker/font-awesome": "^0.4.0",
+    "@mdx-js/react": "^1.5.3",
     "lodash": "^4.17.15",
     "polished": "^3.4.2",
     "react": "^16.12.0",
