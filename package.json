@@ -1,0 +1,80 @@
+{
+  "name": "@fedlinker/react-bootstrap",
+  "version": "0.1.0",
+  "description": "React components of bootstrap design.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "docz dev",
+    "build": "rm -rf ./lib && tsc",
+    "gen-changelog": "npm run changelog && git add . && git commit -m 'docs(changelog): update CHANGELOG.md' && git push && git push --tags",
+    "changelog": "conventional-changelog -n ./node_modules/@codoonfxd/changelog-config/index.js -i CHANGELOG.md -s -r 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fedlinker/react-bootstrap.git"
+  },
+  "keywords": [
+    "bootstrap",
+    "react",
+    "component"
+  ],
+  "authors": [
+    {
+      "name": "Jerry Shen",
+      "email": "327538014@qq.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fedlinker/react-bootstrap/issues"
+  },
+  "homepage": "https://github.com/fedlinker/react-bootstrap#readme",
+  "dependencies": {
+    "@emotion/core": "^10.0.27",
+    "@fedlinker/font-awesome": "^0.4.0",
+    "lodash": "^4.17.15",
+    "polished": "^3.4.2",
+    "react": "^16.12.0",
+    "theme-ui": "^0.2.52"
+  },
+  "devDependencies": {
+    "@codoonfxd/changelog-config": "^0.2.0",
+    "@codoonfxd/commitlint-config": "^0.2.0",
+    "@types/lodash": "^4.14.149",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/theme-ui": "^0.2.6",
+    "commitlint": "^8.3.4",
+    "conventional-changelog-cli": "^2.0.31",
+    "docz": "^2.2.0",
+    "husky": "^4.0.9",
+    "lint-staged": "^9.5.0",
+    "prettier": "^1.19.1",
+    "prettier-quick": "^0.0.5",
+    "pretty-quick": "^2.0.1",
+    "react-dom": "^16.12.0",
+    "typescript": "^3.7.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "**/*.ts?(x)": [
+      "pretty-quick --staged"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@codoonfxd/commitlint-config"
+    ]
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "es5"
+  }
+}

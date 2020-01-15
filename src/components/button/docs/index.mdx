@@ -1,0 +1,35 @@
+---
+name: Button
+route: /components/button
+menu: Show
+---
+
+import { Playground, Props } from "docz";
+import Button from "../../button";
+
+## Button
+
+The button component is used for the area of clicking.
+
+## Demos
+
+### Button types
+
+<Playground>
+  {() => {
+    var margin = "12px";
+    return ["primary", "success", "warning", "danger", "info", "basic"].map(
+      t => {
+        return (
+          <Button type={t} key={t} css={{ margin }}>
+            {t.toUpperCase()}
+          </Button>
+        );
+      }
+    );
+  }}
+</Playground>
+
+## Api
+
+<Props of={Button} />
