@@ -11,7 +11,8 @@ enum EButtonType {
   warning = "warning",
   danger = "danger",
   info = "info",
-  basic = "basic",
+  light = "light",
+  dark = "dark",
 }
 export type IButtonTypeKey = keyof typeof EButtonType;
 
@@ -102,7 +103,7 @@ const Button: SFC<IButtonProps> = props => {
         },
         "&:focus": {
           backgroundColor: darken(type!, 0.07),
-          boxShadow: "0 0 0 4px #eee",
+          boxShadow: t => `0 0 0 3px ${transparentize(type!, 0.5)(t)}`,
         },
         "&:active": {
           backgroundColor: darken(type!, 0.15),
@@ -118,7 +119,7 @@ const Button: SFC<IButtonProps> = props => {
 };
 
 Button.defaultProps = {
-  type: "basic",
+  type: "light",
   size: "medium",
 };
 

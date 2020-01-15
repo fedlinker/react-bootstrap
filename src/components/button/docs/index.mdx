@@ -18,15 +18,21 @@ The button component is used for the area of clicking.
 <Playground>
   {() => {
     var margin = "12px";
-    return ["primary", "success", "warning", "danger", "info", "basic"].map(
-      t => {
-        return (
-          <Button type={t} key={t} css={{ margin }}>
-            {t.toUpperCase()}
-          </Button>
-        );
-      }
-    );
+    return [
+      "primary",
+      "success",
+      "warning",
+      "danger",
+      "info",
+      "light",
+      "dark",
+    ].map(t => {
+      return (
+        <Button type={t} key={t} css={{ margin }}>
+          {t.toUpperCase()}
+        </Button>
+      );
+    });
   }}
 </Playground>
 
