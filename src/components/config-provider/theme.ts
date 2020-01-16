@@ -32,17 +32,21 @@ const BASE_COLORS = {
 };
 
 export const theme: Theme = {
-  space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
+  space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
   fonts: {
     body: "system-ui, sans-serif",
     heading: "inherit",
     monospace: "Menlo, monospace",
   },
+  // base font-size is 16px, index is 2.
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontWeights: {
+    lighter: "lighter",
+    light: 300,
     body: 400,
     heading: 700,
     bold: 700,
+    bolder: "bolder",
   },
   lineHeights: {
     body: 1.5,

@@ -5,6 +5,7 @@ menu: Show
 ---
 
 import { Playground, Props } from "docz";
+import { useState } from "react";
 import Button from "../../button";
 
 ## Button
@@ -13,7 +14,7 @@ The button component is used for the area of clicking.
 
 ## Demos
 
-### Button types
+### Types
 
 <Playground>
   {() => {
@@ -26,13 +27,122 @@ The button component is used for the area of clicking.
       "info",
       "light",
       "dark",
+      "link",
     ].map(t => {
       return (
-        <Button type={t} key={t} css={{ margin }}>
+        <Button type={t} key={t} style={{ margin }}>
           {t.toUpperCase()}
         </Button>
       );
     });
+  }}
+</Playground>
+
+### Sizes
+
+<Playground>
+  {() => {
+    var margin = "12px";
+    return [undefined, "lg", "sm"].map(size => {
+      return (
+        <Button size={size} key={size} type="primary" style={{ margin }}>
+          size-{size || "default"}
+        </Button>
+      );
+    });
+  }}
+</Playground>
+
+### Disabled state
+
+<Playground>
+  {() => {
+    var margin = "12px";
+    return [
+      "primary",
+      "success",
+      "warning",
+      "danger",
+      "info",
+      "light",
+      "dark",
+      "link",
+    ].map(t => {
+      return (
+        <Button type={t} key={t} style={{ margin }} disabled>
+          {t.toUpperCase()}
+        </Button>
+      );
+    });
+  }}
+</Playground>
+
+### Block state
+
+<Playground>
+  {() => {
+    const marginTop = "12px";
+    const margin = "12px";
+    return (
+      <div>
+        <div>
+          {["primary", "success", "warning"].map(t => {
+            return (
+              <Button type={t} key={t} style={{ margin }}>
+                {t.toUpperCase()}
+              </Button>
+            );
+          })}
+        </div>
+        <div>
+          {["primary", "success", "warning"].map(t => {
+            return (
+              <Button type={t} key={t} style={{ marginTop }} block>
+                {t.toUpperCase()}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }}
+</Playground>
+
+### Loading state
+
+<Playground>
+  {() => {
+    const [loading, setLoading] = useState(true);
+    var margin = "12px";
+    const handleLoadingChange = () => {
+      setLoading(!loading);
+    };
+    return (
+      <div>
+        <div>
+          Button status: {loading ? "Loading" : "Not loading"}{" "}
+          <Button onClick={handleLoadingChange}>Change Status</Button>
+        </div>
+        <div>
+          {[
+            "primary",
+            "success",
+            "warning",
+            "danger",
+            "info",
+            "light",
+            "dark",
+            "link",
+          ].map(t => {
+            return (
+              <Button type={t} key={t} style={{ margin }} loading={loading}>
+                {t.toUpperCase()}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+    );
   }}
 </Playground>
 

@@ -1194,10 +1194,10 @@
   resolved "https://registry.npm.taobao.org/@emotion/weak-memoize/download/@emotion/weak-memoize-0.2.5.tgz?cache=0&sync_timestamp=1577064844289&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40emotion%2Fweak-memoize%2Fdownload%2F%40emotion%2Fweak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha1-ju2YLi7m9/TkTCU+EpYpgHke/UY=
 
-"@fedlinker/font-awesome@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.npm.taobao.org/@fedlinker/font-awesome/download/@fedlinker/font-awesome-0.4.0.tgz#cf871b746912f81047212fa39cac691ba5486d35"
-  integrity sha1-z4cbdGkS+BBHIS+jnKxpG6VIbTU=
+"@fedlinker/font-awesome@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/@fedlinker/font-awesome/-/font-awesome-0.4.2.tgz#10b3212aaac12d23459a938870d6f5d7e776475f"
+  integrity sha512-/M1HkITXH8Ru2zrLYedXpQ/yGa//0mz8eppB5eR1/kwPLhtF+ZJeFADNL9aLkjLeoU+iPqjgY57UxcOxJH97qA==
 
 "@hapi/address@2.x.x":
   version "2.1.4"

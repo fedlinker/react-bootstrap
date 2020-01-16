@@ -31,7 +31,7 @@
   "homepage": "https://github.com/fedlinker/react-bootstrap#readme",
   "dependencies": {
     "@emotion/core": "^10.0.27",
-    "@fedlinker/font-awesome": "^0.4.0",
+    "@fedlinker/font-awesome": "^0.4.2",
     "@mdx-js/react": "^1.5.3",
     "lodash": "^4.17.15",
     "polished": "^3.4.2",
