@@ -18,7 +18,7 @@ yarn add @fedlinker/react-bootstrap
 
 The components developed path is `/src/components`.
 
-All the components is built with these dependencies below:
+All the components are built with these dependencies below:
 
 - `@emotion/core`: **css-in-js** library.
 - `theme-ui`: support theme function with emotion.
@@ -28,5 +28,6 @@ All the components is built with these dependencies below:
 ### Documentations
 
 - Documents are built with `docz`.
+- This project uses the custom components in `/src/gatsby-theme-docz`.
 
 if you want to add document for your component, add `docs` folder in your component directory and add `.mdx` file in this folder.
