@@ -31,3 +31,5 @@ All the components are built with these dependencies below:
 - This project uses the custom components in `/src/gatsby-theme-docz`.
 
 if you want to add document for your component, add `docs` folder in your component directory and add `.mdx` file in this folder.
+
+### [Changelog](https://github.com/fedlinker/react-bootstrap/blob/master/CHANGELOG.md)
