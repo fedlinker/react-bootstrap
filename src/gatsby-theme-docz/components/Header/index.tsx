@@ -1,10 +1,12 @@
 /** @jsx jsx */
-import { jsx } from "theme-ui";
+import { jsx, useColorMode } from "theme-ui";
 import { useConfig } from "docz";
-import { BrandsBootstrap } from "@fedlinker/font-awesome";
+import { BrandsBootstrap, SolidSun, SolidMoon } from "@fedlinker/font-awesome";
+import Button from "@/button";
 
 export default function Header() {
   const config = useConfig();
+  const [colorMode, setColorMode] = useColorMode();
 
   return (
     <div
@@ -21,7 +23,8 @@ export default function Header() {
         zIndex: 10000,
       }}
     >
-      <div
+      <a
+        href="/"
         sx={{
           display: "flex",
           flex: 1,
@@ -29,11 +32,20 @@ export default function Header() {
           fontWeight: "bold",
           fontSize: 4,
           alignItems: "center",
+          textDecoration: "none",
         }}
       >
         <BrandsBootstrap sx={{ fontSize: "36px", marginRight: "8px" }} />
         {config.title}
-      </div>
+      </a>
+      <Button
+        type="light"
+        icon={colorMode === "light" ? SolidSun : SolidMoon}
+        size="sm"
+        onClick={() => setColorMode(colorMode === "light" ? "dark" : "light")}
+      >
+        {colorMode}
+      </Button>
     </div>
   );
 }

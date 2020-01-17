@@ -1,12 +1,5 @@
 import { SxStyleProp, Theme } from "theme-ui";
 
-const heading: SxStyleProp = {
-  color: "text",
-  fontFamily: "heading",
-  lineHeight: "heading",
-  fontWeight: "heading",
-};
-
 const BASE_COLORS = {
   white: "#fff",
   gray100: "#f8f9fa",
@@ -31,13 +24,31 @@ const BASE_COLORS = {
   cyan: "#17a2b8",
 };
 
+const BASE_HEADING_STYLES: SxStyleProp = {
+  color: "text",
+  fontFamily: "heading",
+  lineHeight: "heading",
+  fontWeight: "heading",
+};
+
+/**
+ * Extra small < 576px
+ * Small < 768
+ * Medium < 992px
+ * Large < 1200px
+ * Extra large ≥ 1200px
+ */
+const DEFAULT_BREAKPOINTS = ["576px", "768px", "992px", "1200px"];
+
 export const theme: Theme = {
+  initialColorMode: "light",
   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
   fonts: {
     body: "system-ui, sans-serif",
     heading: "inherit",
     monospace: "Menlo, monospace",
   },
+  breakpoints: DEFAULT_BREAKPOINTS,
   // base font-size is 16px, index is 2.
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontWeights: {
@@ -53,8 +64,8 @@ export const theme: Theme = {
     heading: 1.125,
   },
   colors: {
-    text: "#222b45",
-    background: "#fff",
+    text: BASE_COLORS.gray900,
+    background: BASE_COLORS.white,
     primary: BASE_COLORS.blue,
     secondary: BASE_COLORS.gray600,
     success: BASE_COLORS.green,
@@ -67,8 +78,8 @@ export const theme: Theme = {
     border: BASE_COLORS.gray200,
     modes: {
       dark: {
-        text: "#fff",
-        background: "#192038",
+        text: BASE_COLORS.white,
+        background: BASE_COLORS.gray900,
         primary: BASE_COLORS.blue,
         secondary: BASE_COLORS.gray600,
         success: BASE_COLORS.green,
@@ -78,7 +89,7 @@ export const theme: Theme = {
         light: BASE_COLORS.gray100,
         dark: BASE_COLORS.gray800,
         shadow: BASE_COLORS.gray900,
-        border: BASE_COLORS.cyan,
+        border: BASE_COLORS.gray700,
       },
     },
   },
@@ -87,29 +98,31 @@ export const theme: Theme = {
       fontFamily: "body",
       lineHeight: "body",
       fontWeight: "body",
+      color: "text",
+      boxSizing: "border-box",
     },
     h1: {
-      ...heading,
+      ...BASE_HEADING_STYLES,
       fontSize: 5,
     },
     h2: {
-      ...heading,
+      ...BASE_HEADING_STYLES,
       fontSize: 4,
     },
     h3: {
-      ...heading,
+      ...BASE_HEADING_STYLES,
       fontSize: 3,
     },
     h4: {
-      ...heading,
+      ...BASE_HEADING_STYLES,
       fontSize: 2,
     },
     h5: {
-      ...heading,
+      ...BASE_HEADING_STYLES,
       fontSize: 1,
     },
     h6: {
-      ...heading,
+      ...BASE_HEADING_STYLES,
       fontSize: 0,
     },
     div: {
