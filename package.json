@@ -3,6 +3,8 @@
   "version": "0.1.1-alpha.0",
   "description": "React components of bootstrap design.",
   "main": "lib/index.js",
+  "module": "lib/index.js",
+  "sideEffects": false,
   "scripts": {
     "dev": "docz dev",
     "build": "rm -rf ./lib && tsc",
