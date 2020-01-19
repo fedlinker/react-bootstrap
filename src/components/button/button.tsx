@@ -67,6 +67,16 @@ export interface IButtonProps {
    * whether the button's display property is block.
    */
   block?: boolean;
+
+  /**
+   * href prop of tag a
+   */
+  href?: string;
+
+  /**
+   * target prop of tag a
+   */
+  target?: string;
 }
 
 const Button: SFC<IButtonProps> = props => {
@@ -80,6 +90,8 @@ const Button: SFC<IButtonProps> = props => {
     size,
     disabled,
     block,
+    href,
+    target,
   } = props;
   const handleClick = () => {
     if (loading || !onClick) {
@@ -87,6 +99,10 @@ const Button: SFC<IButtonProps> = props => {
     }
     onClick();
   };
+
+  const isLink = useMemo(() => {
+    return type === "link";
+  }, [type]);
 
   const sizeStyles: SxStyleProp = useMemo(() => {
     if (size == null) {
@@ -141,7 +157,7 @@ const Button: SFC<IButtonProps> = props => {
   const linkStyles = useMemo(() => {
     const backgroundColor = "rgba(0,0,0,0)";
     const color = "primary";
-    return type === "link"
+    return isLink
       ? ({
           color,
           boxShadow: "none",
@@ -162,10 +178,16 @@ const Button: SFC<IButtonProps> = props => {
           },
         } as SxStyleProp)
       : {};
-  }, [type]);
+  }, [isLink]);
+
+  const ElementType = useMemo(() => {
+    return isLink ? "a" : "button";
+  }, [isLink]);
 
   return (
-    <button
+    <ElementType
+      href={isLink ? href : undefined}
+      target={isLink ? target : undefined}
       sx={{
         display: "inline-flex",
         alignItems: "center",
@@ -179,10 +201,10 @@ const Button: SFC<IButtonProps> = props => {
         color: textColor(type!),
         fontWeight: "bold",
         "&:hover": {
-          backgroundColor: transparentize(type!, 0.382),
+          backgroundColor: darken(type!, 0.07),
         },
         "&:focus": {
-          backgroundColor: darken(type!, 0.07),
+          backgroundColor: darken(type!, 0.1),
           boxShadow: t => `0 0 0 3px ${transparentize(type!, 0.5)(t)}`,
         },
         "&:active": {
@@ -207,7 +229,7 @@ const Button: SFC<IButtonProps> = props => {
       ) : null}
       {IconComponent ? <IconComponent style={{ marginRight: "3px" }} /> : null}
       <div sx={{ flex: 1 }}>{children}</div>
-    </button>
+    </ElementType>
   );
 };
 
