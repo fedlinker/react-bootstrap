@@ -21,6 +21,10 @@ export function Layout(props: PropsWithChildren<unknown>) {
           html {
             margin: 0;
             padding: 0;
+          }
+          *,
+          *::before,
+          *::after {
             box-sizing: border-box;
           }
         `}
@@ -47,7 +51,9 @@ export function Layout(props: PropsWithChildren<unknown>) {
             <Sidebar />
           </div>
         </div>
-        <div sx={{ padding: 3, boxSizing: "border-box" }}>{children}</div>
+        <div sx={{ padding: 3, boxSizing: "border-box", width: "100%" }}>
+          {children}
+        </div>
       </div>
     </div>
   );

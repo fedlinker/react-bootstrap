@@ -3,10 +3,15 @@ import { jsx, useColorMode } from "theme-ui";
 import { useConfig } from "docz";
 import { BrandsBootstrap, SolidSun, SolidMoon } from "@fedlinker/font-awesome";
 import Button from "@/button";
+import { useEffect } from "react";
 
 export default function Header() {
   const config = useConfig();
   const [colorMode, setColorMode] = useColorMode();
+  useEffect(() => {
+    console.log(config, colorMode);
+  }, [colorMode]);
+  const isDarkMode = colorMode === "dark";
 
   return (
     <div
@@ -40,9 +45,9 @@ export default function Header() {
       </a>
       <Button
         type="light"
-        icon={colorMode === "light" ? SolidSun : SolidMoon}
+        icon={isDarkMode ? SolidMoon : SolidSun}
         size="sm"
-        onClick={() => setColorMode(colorMode === "light" ? "dark" : "light")}
+        onClick={() => setColorMode(isDarkMode ? "light" : "dark")}
       >
         {colorMode}
       </Button>

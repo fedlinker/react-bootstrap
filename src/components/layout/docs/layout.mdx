@@ -1,0 +1,134 @@
+---
+name: Layout
+route: /components/layout
+menu: Show
+---
+
+import { Container, Row, Col as ColItem } from "../index";
+import { Playground, Props } from "docz";
+
+## Container
+
+<Playground>
+  {() => {
+    const style = {
+      backgroundColor: "primary",
+      textAlign: "center",
+      color: "#fff",
+      marginBottom: "16px",
+    };
+    return (
+      <div>
+        <Container style={style}>Container</Container>
+        <Container style={style} fluid>
+          Container(fluid is true)
+        </Container>
+      </div>
+    );
+  }}
+</Playground>
+
+## Grid
+
+The Grid Layout is simulated by flex display.
+
+Each row is divided into **24** columns.
+
+### Default Grid Layout
+
+The _default_ display is bootstrap responsive layout.
+
+<Playground>
+  {() => {
+    const row1Col1Style = {
+      backgroundColor: "primary",
+      color: "#fff",
+      padding: "16px",
+      textAlign: "center",
+    };
+    const row1Col2Style = {
+      backgroundColor: "info",
+      color: "#fff",
+      padding: "16px",
+      textAlign: "center",
+    };
+    const row1Col3Style = {
+      backgroundColor: "danger",
+      color: "#fff",
+      padding: "16px",
+      textAlign: "center",
+    };
+    return (
+      <div>
+        <Row>
+          <ColItem style={row1Col1Style}>col-1</ColItem>
+          <ColItem style={row1Col2Style}>col-2</ColItem>
+          <ColItem style={row1Col3Style}>col-3</ColItem>
+        </Row>
+      </div>
+    );
+  }}
+</Playground>
+
+### Custom Cols Prop
+
+You can custom the layout with prop `cols`.
+
+If you pass `number`, it is the slice of 24 and range is 1 to 24.
+
+If you pass `string`, its type is the pixel value or percent value, such as `100px` and `50%`.
+
+<Playground>
+  {() => {
+    const styles = {
+      padding: "16px",
+      border: "1px solid #eee",
+      textAlign: "center",
+    };
+    return (
+      <div>
+        <Row>
+          <ColItem style={styles} cols={6}>
+            column-1
+          </ColItem>
+          <ColItem style={styles} cols={6}>
+            column-2
+          </ColItem>
+          <ColItem style={styles} cols={12}>
+            column-3
+          </ColItem>
+        </Row>
+      </div>
+    );
+  }}
+</Playground>
+
+### Bootstrap Responsive Grid
+
+If you pass array, this value will be responsive with device width. This value is the same type as the single value.
+
+<Playground>
+  {() => {
+    const styles = {
+      padding: "16px",
+      border: "1px solid #eee",
+      textAlign: "center",
+    };
+    const percent100 = "100%";
+    return (
+      <div>
+        <Row>
+          <ColItem style={styles} cols={[percent100, 6, 6]}>
+            column-1
+          </ColItem>
+          <ColItem style={styles} cols={[percent100, 18, 6]}>
+            column-2
+          </ColItem>
+          <ColItem style={styles} cols={[percent100, 24, 12]}>
+            column-3
+          </ColItem>
+        </Row>
+      </div>
+    );
+  }}
+</Playground>

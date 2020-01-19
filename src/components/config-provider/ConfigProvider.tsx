@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useState, useCallback } from "react";
-import { ThemeProvider, Theme } from "theme-ui";
+import { ThemeProvider, Theme, ColorMode } from "theme-ui";
 import { ConfigContext, DEFAULT_THEME, IConfig } from "./ConfigContext";
 
 export interface IConfigProviderProps {
@@ -26,7 +26,10 @@ export default function ConfigProvider(
 
   return (
     <ConfigContext.Provider value={{ config, setConfig }}>
-      <ThemeProvider<Theme> theme={config.theme}>{children}</ThemeProvider>
+      <ThemeProvider<Theme> theme={config.theme}>
+        <ColorMode />
+        {children}
+      </ThemeProvider>
     </ConfigContext.Provider>
   );
 }
