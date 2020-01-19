@@ -1,3 +1,3 @@
-import ConfigProvider from "./ConfigProvider";
-
-export default ConfigProvider;
+export * from "./ConfigProvider";
+export * from "./ConfigContext";
+export { theme } from "./theme";

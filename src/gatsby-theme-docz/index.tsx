@@ -1,8 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { ComponentsProvider, ComponentsMap, useConfig } from "docz";
-import ConfigProvider from "@/config-provider";
+import { ConfigProvider, theme as DEFAULT_THEME } from "@/index";
 import { theme } from "docz";
-import { DEFAULT_THEME } from "@/config-provider/ConfigContext";
 import { Playground } from "./components/Playground";
 import { Props } from "./components/Props";
 import { Layout } from "./components/Layout";

@@ -79,7 +79,7 @@ export interface IButtonProps {
   target?: string;
 }
 
-const Button: SFC<IButtonProps> = props => {
+export const Button: SFC<IButtonProps> = props => {
   const {
     style: cssProp,
     type,
@@ -236,5 +236,3 @@ const Button: SFC<IButtonProps> = props => {
 Button.defaultProps = {
   type: "light",
 };
-
-export default Button;

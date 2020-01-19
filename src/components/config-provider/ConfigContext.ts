@@ -11,11 +11,9 @@ export interface IConfigContext {
   setConfig(config: Partial<IConfig>): any;
 }
 
-export const DEFAULT_THEME = theme;
-
 export const ConfigContext = createContext<IConfigContext>({
   config: {
-    theme: DEFAULT_THEME,
+    theme,
   },
   setConfig: () => null,
 });
