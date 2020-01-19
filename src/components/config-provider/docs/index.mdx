@@ -1,0 +1,51 @@
+---
+name: Config Provider
+route: /components/config-provider
+menu: Others
+---
+
+import { Playground } from "docz";
+
+# Config Provider
+
+This component provide the global config (such as theme, i18n(WIP)), and it **must** be added in the root component.
+
+We use the `theme-ui` as the theme system.
+
+## Usage
+
+### Add into root component
+
+```jsx
+import { ConfigProvider } from "@fedlinker/react-bootstrap";
+
+export const App = props => {
+  return <ConfigProvider>{props.children}</ConfigProvider>;
+};
+```
+
+### Use hooks
+
+```jsx
+import { useConfig, useTheme } from "@fedlinker/react-bootstrap";
+
+export const MyComponent = () => {
+  const [config, setConfig] = useConfig();
+  const [theme, setTheme] = useTheme();
+  return null;
+};
+```
+
+### Use High Order Component
+
+```jsx
+import { withConfig, withTheme } from "@fedlinker/react-bootstrap";
+
+const MyComponent = props => {
+  // config and theme will be injected into props.
+  const { config, setConfig, theme, setTheme } = props;
+  return null;
+};
+
+export const InjectedComponent = withConfig(withTheme(MyComponent));
+```
