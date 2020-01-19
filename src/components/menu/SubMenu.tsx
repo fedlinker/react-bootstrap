@@ -4,12 +4,13 @@ import { jsx } from "theme-ui";
 import { SolidAngleDown } from "@fedlinker/font-awesome";
 
 interface ISubMenuProps {
+  title: React.ReactNode;
   level?: number;
   children?: React.ReactNode;
 }
 
 const SubMenu: React.SFC<ISubMenuProps> = props => {
-  const { children, level } = props;
+  const { title, children, level } = props;
   return (
     <div sx={{}}>
       <div
@@ -27,7 +28,7 @@ const SubMenu: React.SFC<ISubMenuProps> = props => {
           },
         }}
       >
-        <div sx={{ flex: 1 }}>SubMenu</div>
+        <div sx={{ flex: 1 }}>{title}</div>
         <SolidAngleDown />
       </div>
       {React.Children.map(children, (c, i) => {

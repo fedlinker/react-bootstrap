@@ -3,14 +3,10 @@ import { jsx, useColorMode } from "theme-ui";
 import { useConfig } from "docz";
 import { BrandsBootstrap, SolidSun, SolidMoon } from "@fedlinker/font-awesome";
 import { Button } from "@/index";
-import { useEffect } from "react";
 
 export default function Header() {
   const config = useConfig();
   const [colorMode, setColorMode] = useColorMode();
-  useEffect(() => {
-    console.log(config, colorMode);
-  }, [colorMode]);
   const isDarkMode = colorMode === "dark";
 
   return (

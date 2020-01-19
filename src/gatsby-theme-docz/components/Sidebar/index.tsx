@@ -12,7 +12,7 @@ export default function Sidebar() {
   const renderMenuItem = (opt: IDoczMenuItem) => {
     if (Array.isArray(opt.menu)) {
       return (
-        <SubMenu>
+        <SubMenu title={opt.name}>
           {map(opt.menu, o => (
             <div key={o.route}>{renderMenuItem(o)}</div>
           ))}
