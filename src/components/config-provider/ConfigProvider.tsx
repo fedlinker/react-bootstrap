@@ -17,7 +17,7 @@ export function ConfigProvider(props: PropsWithChildren<IConfigProviderProps>) {
   });
 
   const setConfig = useCallback(
-    (c: IConfig) => {
+    (c: Partial<IConfig>) => {
       changeConfig({ ...config, ...c });
     },
     [config]
