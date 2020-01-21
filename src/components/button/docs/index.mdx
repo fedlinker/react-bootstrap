@@ -67,6 +67,30 @@ The button component is used for the area of clicking.
   }}
 </Playground>
 
+### Outline buttons
+
+<Playground>
+  {() => {
+    var margin = "12px";
+    return [
+      "primary",
+      "success",
+      "warning",
+      "danger",
+      "info",
+      "light",
+      "dark",
+      "link",
+    ].map(t => {
+      return (
+        <Button type={t} key={t} style={{ margin }} outline>
+          {t.toUpperCase()}
+        </Button>
+      );
+    });
+  }}
+</Playground>
+
 ### Disabled state
 
 <Playground>

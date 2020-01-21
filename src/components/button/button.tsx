@@ -4,7 +4,11 @@ import { CSSObject } from "@emotion/core";
 import { jsx, SxStyleProp } from "theme-ui";
 import { SolidCircleNotch } from "@fedlinker/font-awesome";
 import { IIconComponentType } from "@fedlinker/font-awesome/lib/generateIcon";
-import { textColor, darken, transparentize } from "../utils/colors";
+import {
+  textColorTheme,
+  darkenTheme,
+  transparentizeTheme,
+} from "../utils/colors";
 import { rotate } from "../utils/keyframes";
 
 enum EButtonType {
@@ -165,16 +169,16 @@ export const Button: SFC<IButtonProps> = props => {
           "&:hover": {
             backgroundColor,
             textDecoration: "underline",
-            color: darken(color, 0.075),
+            color: darkenTheme(color, 0.075),
           },
           "&:focus": {
             backgroundColor,
-            color: darken(color, 0.1),
+            color: darkenTheme(color, 0.1),
             boxShadow: "none",
           },
           "&:active": {
             backgroundColor,
-            color: darken(color, 0.15),
+            color: darkenTheme(color, 0.15),
           },
         } as SxStyleProp)
       : {};
@@ -198,17 +202,17 @@ export const Button: SFC<IButtonProps> = props => {
         transition: "all 0.3s",
         border: "none",
         cursor: "pointer",
-        color: textColor(type!),
+        color: textColorTheme(type!),
         fontWeight: "bold",
         "&:hover": {
-          backgroundColor: darken(type!, 0.07),
+          backgroundColor: darkenTheme(type!, 0.07),
         },
         "&:focus": {
-          backgroundColor: darken(type!, 0.1),
-          boxShadow: t => `0 0 0 3px ${transparentize(type!, 0.5)(t)}`,
+          backgroundColor: darkenTheme(type!, 0.1),
+          boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
         },
         "&:active": {
-          backgroundColor: darken(type!, 0.15),
+          backgroundColor: darkenTheme(type!, 0.15),
         },
         ...sizeStyles,
         ...blockStyles,

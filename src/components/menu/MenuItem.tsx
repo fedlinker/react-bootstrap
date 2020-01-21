@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React from "react";
 import { jsx } from "theme-ui";
-import { transparentize } from "../utils/colors";
+import { transparentizeTheme } from "../utils/colors";
 
 interface IMenuItemProps {
   path: string;
@@ -24,7 +24,7 @@ const MenuItem: React.SFC<IMenuItemProps> = props => {
         transition: "all 0.3s",
         "&:hover": {
           color: "primary",
-          backgroundColor: transparentize("primary", 0.95),
+          backgroundColor: transparentizeTheme("primary", 0.95),
         },
       }}
       onClick={() => onClick && onClick(path)}

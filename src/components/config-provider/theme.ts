@@ -1,6 +1,6 @@
 import { SxStyleProp, Theme } from "theme-ui";
 
-const BASE_COLORS = {
+export const BASE_COLORS = {
   white: "#fff",
   gray100: "#f8f9fa",
   gray200: "#e9ecef",
@@ -68,7 +68,7 @@ export const theme: Theme = {
     primary: BASE_COLORS.blue,
     secondary: BASE_COLORS.gray600,
     success: BASE_COLORS.green,
-    warning: BASE_COLORS.orange,
+    warning: BASE_COLORS.yellow,
     danger: BASE_COLORS.red,
     info: BASE_COLORS.cyan,
     light: BASE_COLORS.gray100,
