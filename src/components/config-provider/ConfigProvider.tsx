@@ -1,18 +1,19 @@
-import React, { PropsWithChildren, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { ThemeProvider, Theme, ColorMode } from "theme-ui";
 import { ConfigContext, IConfig } from "./ConfigContext";
 import { theme } from "./theme";
 
 export interface IConfigProviderProps {
-  config?: IConfig;
+  config?: Partial<IConfig>;
+  children?: React.ReactNode;
 }
 
-export function ConfigProvider(props: PropsWithChildren<IConfigProviderProps>) {
+export const ConfigProvider: React.SFC<IConfigProviderProps> = function(props) {
   const { children, config: configProp } = props;
   const [config, changeConfig] = useState<IConfig>({
     theme: {
       ...theme,
-      ...(configProp ? configProp.theme : {}),
+      ...(configProp!.theme || {}),
     } as Theme,
   });
 
@@ -31,4 +32,8 @@ export function ConfigProvider(props: PropsWithChildren<IConfigProviderProps>) {
       </ThemeProvider>
     </ConfigContext.Provider>
   );
-}
+};
+
+ConfigProvider.defaultProps = {
+  config: {},
+};
