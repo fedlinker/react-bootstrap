@@ -28,6 +28,54 @@ import { Playground, Props } from "docz";
   }}
 </Playground>
 
+## Bootstrap Responsive Layout
+
+The responsive layout is very easy to implement in `@fedlinker/react-bootstrap`(relied on [`theme-ui`](https://theme-ui.com/getting-started#responsive-styles)).
+
+You can write responsive layout as easy as breathing.
+
+```jsx
+/** @jsx jsx */
+import { jsx } from "theme-ui";
+
+function Demo() {
+  return (
+    <div sx={{ width: ["100px", "200px", "300px", "400px", "500px"] }}></div>
+  );
+}
+```
+
+The very important thing you should know is the `breakpoints`.It is defined at `ConfigProvider`.
+The default value is the breakpoints of bootstrap("576px", "768px", "992px", "1200px").
+
+The default breakpoints represents the layout list below:
+
+- Extra small < 576px
+- Small < 768
+- Medium < 992px
+- Large < 1200px
+- Extra large ≥ 1200px
+
+You can also customize it:
+
+```jsx
+import { ConfigProvider } from "@fedlinker/react-bootstrap";
+
+function App(props) {
+  return (
+    <ConfigProvider
+      config={{
+        theme: {
+          breakpoints: ["300px", "500px", "700px", "900px"],
+        },
+      }}
+    >
+      {props.children}
+    </ConfigProvider>
+  );
+}
+```
+
 ## Grid
 
 The Grid Layout is simulated by flex display.
