@@ -3,7 +3,6 @@ import { ReactChild, SFC, useMemo } from "react";
 import { CSSObject } from "@emotion/core";
 import { jsx, SxStyleProp } from "theme-ui";
 import { SolidCircleNotch } from "@fedlinker/font-awesome";
-import { IIconComponentType } from "@fedlinker/font-awesome/lib/generateIcon";
 import {
   textColorTheme,
   darkenTheme,
@@ -67,8 +66,6 @@ export interface IButtonProps {
    */
   onClick?(): void;
 
-  icon?: IIconComponentType;
-
   /**
    * whether the button's display property is block.
    */
@@ -91,7 +88,6 @@ export const Button: SFC<IButtonProps> = props => {
     type,
     loading,
     onClick,
-    icon: IconComponent,
     children,
     size,
     disabled,
@@ -130,23 +126,24 @@ export const Button: SFC<IButtonProps> = props => {
   }, [size]);
 
   const disabledStyles: SxStyleProp = useMemo(() => {
+    const backgroundColor = outline ? undefined : type;
     return disabled
       ? {
           opacity: 0.65,
           cursor: "not-allowed",
           "&:hover": {
-            backgroundColor: type,
+            backgroundColor,
           },
           "&:focus": {
-            backgroundColor: type,
+            backgroundColor,
             boxShadow: "none",
           },
           "&:active": {
-            backgroundColor: type,
+            backgroundColor,
           },
         }
       : {};
-  }, [disabled, type]);
+  }, [disabled, type, outline]);
 
   const blockStyles: SxStyleProp = useMemo(() => {
     return block
@@ -158,7 +155,23 @@ export const Button: SFC<IButtonProps> = props => {
   }, [block]);
 
   const loadingStyles: SxStyleProp = useMemo(() => {
-    return loading ? { opacity: 0.65, cursor: "progress" } : {};
+    const backgroundColor = outline ? undefined : type;
+    return loading
+      ? {
+          opacity: 0.65,
+          cursor: "progress",
+          "&:hover": {
+            backgroundColor,
+          },
+          "&:focus": {
+            backgroundColor,
+            boxShadow: "none",
+          },
+          "&:active": {
+            backgroundColor,
+          },
+        }
+      : {};
   }, [loading]);
 
   const linkStyles = useMemo(() => {
@@ -221,6 +234,7 @@ export const Button: SFC<IButtonProps> = props => {
       target={isLink ? target : undefined}
       sx={{
         display: "inline-flex",
+        position: "relative",
         alignItems: "center",
         backgroundColor: type,
         fontFamily: "body",
@@ -230,7 +244,7 @@ export const Button: SFC<IButtonProps> = props => {
         border: "none",
         cursor: "pointer",
         color: textColorTheme(type!),
-        fontWeight: "bold",
+        justifyContent: "center",
         "&:hover": {
           backgroundColor: darkenTheme(type!, 0.07),
         },
@@ -259,8 +273,7 @@ export const Button: SFC<IButtonProps> = props => {
           }}
         />
       ) : null}
-      {IconComponent ? <IconComponent style={{ marginRight: "3px" }} /> : null}
-      <div sx={{ flex: 1 }}>{children}</div>
+      {children}
     </ElementType>
   );
 };

@@ -6,6 +6,7 @@ menu: Show
 
 import { Playground, Props } from "docz";
 import { useState } from "react";
+import { BrandsGithub } from "@fedlinker/font-awesome";
 import { Button } from "../index";
 
 ## Button
@@ -95,8 +96,8 @@ The button component is used for the area of clicking.
 
 <Playground>
   {() => {
-    var margin = "12px";
-    return [
+    const margin = "12px";
+    const typeArray = [
       "primary",
       "success",
       "warning",
@@ -105,13 +106,29 @@ The button component is used for the area of clicking.
       "light",
       "dark",
       "link",
-    ].map(t => {
-      return (
-        <Button type={t} key={t} style={{ margin }} disabled>
-          {t.toUpperCase()}
-        </Button>
-      );
-    });
+    ];
+    return (
+      <div>
+        <div>
+          {typeArray.map(t => {
+            return (
+              <Button type={t} key={t} style={{ margin }} disabled>
+                {t.toUpperCase()}
+              </Button>
+            );
+          })}
+        </div>
+        <div>
+          {typeArray.map(t => {
+            return (
+              <Button type={t} key={t} style={{ margin }} disabled outline>
+                {t.toUpperCase()}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+    );
   }}
 </Playground>
 
@@ -178,6 +195,98 @@ The button component is used for the area of clicking.
               </Button>
             );
           })}
+        </div>
+        <div>
+          {[
+            "primary",
+            "success",
+            "warning",
+            "danger",
+            "info",
+            "light",
+            "dark",
+            "link",
+          ].map(t => {
+            return (
+              <Button
+                type={t}
+                key={t}
+                style={{ margin }}
+                loading={loading}
+                outline
+              >
+                {t.toUpperCase()} Outline
+              </Button>
+            );
+          })}
+        </div>
+        <Button block loading={loading} type="primary">
+          Primary Block Button
+        </Button>
+        <div>--</div>
+        <Button block loading={loading} type="info" outline>
+          Info Block Outline Button
+        </Button>
+      </div>
+    );
+  }}
+</Playground>
+
+## Add icon in button
+
+<Playground>
+  {() => {
+    const style = {
+      marginBottom: "8px",
+    };
+    return (
+      <div>
+        <div style={style}>
+          <Button type="primary">
+            <BrandsGithub /> Icon before
+          </Button>
+        </div>
+        <div style={style}>
+          <Button type="success">
+            Icon after <BrandsGithub />
+          </Button>
+        </div>
+        <div style={style}>
+          <Button type="warning" block>
+            <BrandsGithub /> Icon block
+          </Button>
+        </div>
+      </div>
+    );
+  }}
+</Playground>
+
+## Customize button
+
+<Playground>
+  {() => {
+    const custom1 = {
+      backgroundImage: "linear-gradient(30deg, #007bff, #28a745)",
+      color: "#fff",
+    };
+    return (
+      <div>
+        <div>
+          <Button style={custom1} type="primary">
+            Customize background color
+          </Button>
+        </div>
+        <div>---</div>
+        <div>
+          <Button style={custom1} disabled>
+            Customize background color
+          </Button>
+        </div>
+        <div>---</div>
+        <div>
+          <Button style={custom1} loading>
+            Customize background color
+          </Button>
         </div>
       </div>
     );
