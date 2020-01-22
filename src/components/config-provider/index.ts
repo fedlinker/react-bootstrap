@@ -1,3 +1,3 @@
 export * from "./ConfigProvider";
 export * from "./ConfigContext";
-export { theme } from "./theme";
+export { DEAFULT_THEME } from "./theme";

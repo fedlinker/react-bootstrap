@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useCallback } from "react";
-import { theme } from "./theme";
+import { DEAFULT_THEME } from "./theme";
 import { Theme } from "theme-ui";
 
 export interface IConfig {
@@ -14,7 +14,7 @@ export interface IConfigContext {
 
 export const ConfigContext = createContext<IConfigContext>({
   config: {
-    theme,
+    theme: DEAFULT_THEME,
   },
   setConfig: () => null,
 });
