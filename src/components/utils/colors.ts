@@ -69,7 +69,6 @@ export const grayscaleTheme = (c: string, n: number) => desaturateTheme(c, 1);
  * @param color theme color type
  */
 export const textColorTheme = (color: string) => (t: object) => {
-  console.log("123123123", g(t, color));
   return textColor(g(t, color));
 };
 
