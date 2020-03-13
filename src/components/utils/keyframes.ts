@@ -1,9 +1,10 @@
-import { keyframes } from "@emotion/core";
+import { keyframes } from "@emotion/react";
+import { Keyframes } from "@emotion/serialize";
 
 /**
  * rotate keyframe
  */
-export const rotate = keyframes`
+export const rotate: Keyframes = keyframes`
   0% {
     transform: rotate(0deg);
   }

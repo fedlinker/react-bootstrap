@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
-import { ThemeProvider, Theme, ColorMode } from "theme-ui";
+import { ThemeProvider } from "../theme/theme-provider";
+import { ITheme, DEFAULT_THEME } from "../theme/default-theme";
 import { ConfigContext, IConfig } from "./ConfigContext";
-import { DEAFULT_THEME } from "./theme";
 
 export interface IConfigProviderProps {
   config?: Partial<IConfig>;
@@ -12,9 +12,9 @@ export const ConfigProvider: React.SFC<IConfigProviderProps> = function(props) {
   const { children, config: configProp } = props;
   const [config, changeConfig] = useState<IConfig>({
     theme: {
-      ...DEAFULT_THEME,
+      ...DEFAULT_THEME,
       ...(configProp!.theme || {}),
-    } as Theme,
+    } as ITheme,
   });
 
   const setConfig = useCallback(
@@ -26,10 +26,7 @@ export const ConfigProvider: React.SFC<IConfigProviderProps> = function(props) {
 
   return (
     <ConfigContext.Provider value={{ config, setConfig }}>
-      <ThemeProvider<Theme> theme={config.theme}>
-        <ColorMode />
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={config.theme}>{children}</ThemeProvider>
     </ConfigContext.Provider>
   );
 };

@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useCallback } from "react";
-import { DEAFULT_THEME } from "./theme";
-import { Theme } from "theme-ui";
+import { ITheme, DEFAULT_THEME } from "../theme";
 
 export interface IConfig {
-  theme: Theme;
+  theme: ITheme;
 }
 export type IConfigSetFunc = (config: Partial<IConfig>) => any;
-export type IConfigThemeSetFunc = (theme: Partial<Theme>) => any;
+export type IConfigThemeSetFunc = (theme: Partial<ITheme>) => any;
 export interface IConfigContext {
   config: IConfig;
   setConfig: IConfigSetFunc;
@@ -14,7 +13,7 @@ export interface IConfigContext {
 
 export const ConfigContext = createContext<IConfigContext>({
   config: {
-    theme: DEAFULT_THEME,
+    theme: DEFAULT_THEME,
   },
   setConfig: () => null,
 });
@@ -30,7 +29,7 @@ export const useConfig = (): [IConfig, IConfigSetFunc] => {
 /**
  * theme context hooks
  */
-export const useTheme = (): [Theme, IConfigThemeSetFunc] => {
+export const useTheme = (): [ITheme, IConfigThemeSetFunc] => {
   const [config, setConfig] = useConfig();
   const setTheme: IConfigThemeSetFunc = useCallback(
     (newTheme = {}) => {
@@ -65,7 +64,7 @@ export const withConfig = <P extends IConfigContext>(
  * @param Comp
  */
 export const withTheme = <
-  P extends { theme: Theme; setTheme: IConfigThemeSetFunc }
+  P extends { theme: ITheme; setTheme: IConfigThemeSetFunc }
 >(
   Comp: React.ComponentType<P>
 ) => {

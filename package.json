@@ -6,9 +6,8 @@
   "module": "lib/index.js",
   "sideEffects": false,
   "scripts": {
-    "dev": "docz dev",
     "build": "rm -rf ./lib && tsc",
-    "docs:build": "docz build",
+    "storybook": "start-storybook",
     "gen-changelog": "npm run changelog && git add . && git commit -m 'docs(changelog): update CHANGELOG.md' && git push && git push --tags",
     "changelog": "conventional-changelog -n ./node_modules/@codoonfxd/changelog-config/index.js -i CHANGELOG.md -s -r 0"
   },
@@ -33,31 +32,39 @@
   },
   "homepage": "https://github.com/fedlinker/react-bootstrap#readme",
   "dependencies": {
-    "@emotion/core": "^10.0.27",
+    "@emotion/react": "^11.0.0-next.10",
     "@fedlinker/font-awesome": "^0.4.2",
-    "@mdx-js/react": "^1.5.3",
     "lodash": "^4.17.15",
     "polished": "^3.4.2",
     "react": "^16.12.0",
-    "theme-ui": "^0.2.52"
+    "styled-system": "^5.1.5",
+    "theme-ui": "^0.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.7",
     "@codoonfxd/changelog-config": "^0.2.0",
     "@codoonfxd/commitlint-config": "^0.2.0",
+    "@storybook/addon-info": "^5.3.14",
+    "@storybook/react": "^5.3.14",
+    "@types/jest": "^25.1.4",
     "@types/lodash": "^4.14.149",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@types/theme-ui": "^0.2.6",
+    "babel-loader": "^8.0.6",
+    "babel-preset-react-app": "^9.1.1",
     "commitlint": "^8.3.4",
     "conventional-changelog-cli": "^2.0.31",
-    "docz": "^2.2.0",
     "husky": "^4.0.9",
+    "jest": "^25.1.0",
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1",
     "prettier-quick": "^0.0.5",
     "pretty-quick": "^2.0.1",
+    "react-docgen-typescript-loader": "^3.7.1",
     "react-dom": "^16.12.0",
-    "typescript": "^3.7.4"
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3"
   },
   "husky": {
     "hooks": {

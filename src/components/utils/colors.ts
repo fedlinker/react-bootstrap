@@ -17,12 +17,13 @@ import {
   parseToRgb,
 } from "polished";
 import { get } from "@styled-system/css";
-import { BASE_COLORS } from "../config-provider/theme";
+import { BASE_COLORS, ITheme } from "../theme";
 
-const g = (t: object, c: string) =>
-  get(t, `colors.${c}`, c)
+const g = (t: ITheme, c: string) => {
+  return get(t, `colors.${c}`, c)
     .replace(/^var\(--(\w+)(.*?), /, "")
     .replace(/\)/, "");
+};
 
 export const darkenTheme = (c: string, n: number) => (t: object) =>
   darken(n, g(t, c));
@@ -68,6 +69,7 @@ export const grayscaleTheme = (c: string, n: number) => desaturateTheme(c, 1);
  * @param color theme color type
  */
 export const textColorTheme = (color: string) => (t: object) => {
+  console.log("123123123", g(t, color));
   return textColor(g(t, color));
 };
 

@@ -1,16 +1,17 @@
 /** @jsx jsx */
 import { ReactChild, SFC, useMemo } from "react";
+import { CSSObject } from "@emotion/react";
+import { jsx } from "../index";
+import { SxStyleProp } from "theme-ui";
 import { SolidCircleNotch } from "@fedlinker/font-awesome";
-import { jsx, Interpolation } from "../index";
 import {
   textColorTheme,
-  transparentizeTheme,
   darkenTheme,
+  transparentizeTheme,
 } from "../utils/colors";
 import { rotate } from "../utils/keyframes";
-import { getCss } from "../theme/use-css";
 
-export enum EButtonType {
+enum EButtonType {
   primary = "primary",
   success = "success",
   warning = "warning",
@@ -18,6 +19,7 @@ export enum EButtonType {
   info = "info",
   light = "light",
   dark = "dark",
+  link = "link",
 }
 export type IButtonTypeKey = keyof typeof EButtonType;
 
@@ -36,7 +38,7 @@ export interface IButtonProps {
   /**
    * style of button wrapper.
    */
-  style?: Interpolation;
+  style?: CSSObject;
 
   /**
    * button size.
@@ -79,8 +81,6 @@ export interface IButtonProps {
    * target prop of tag a
    */
   target?: string;
-
-  link?: boolean;
 }
 
 export const Button: SFC<IButtonProps> = props => {
@@ -96,7 +96,6 @@ export const Button: SFC<IButtonProps> = props => {
     href,
     target,
     outline,
-    link,
   } = props;
   const handleClick = () => {
     if (loading || !onClick) {
@@ -105,47 +104,49 @@ export const Button: SFC<IButtonProps> = props => {
     onClick();
   };
 
-  const sizeStyles: Interpolation = useMemo(() => {
+  const isLink = useMemo(() => {
+    return type === "link";
+  }, [type]);
+
+  const sizeStyles: SxStyleProp = useMemo(() => {
     if (size == null) {
-      return getCss({
+      return {
         padding: 3,
         paddingTop: 2,
         paddingBottom: 2,
         fontSize: 2,
-      });
+      };
     }
     const isSm = size === "sm";
-    return getCss({
+    return {
       padding: isSm ? 2 : 4,
       paddingTop: isSm ? 1 : 2,
       paddingBottom: isSm ? 1 : 2,
       fontSize: isSm ? 1 : 3,
-    });
+    } as SxStyleProp;
   }, [size]);
 
-  const disabledStyles: Interpolation = useMemo(() => {
-    const backgroundColor = outline ? "" : type;
-    return getCss(
-      disabled
-        ? {
-            opacity: 0.65,
-            cursor: "not-allowed",
-            "&:hover": {
-              backgroundColor,
-            },
-            "&:focus": {
-              backgroundColor,
-              boxShadow: "none",
-            },
-            "&:active": {
-              backgroundColor,
-            },
-          }
-        : {}
-    );
+  const disabledStyles: SxStyleProp = useMemo(() => {
+    const backgroundColor = outline ? undefined : type;
+    return disabled
+      ? {
+          opacity: 0.65,
+          cursor: "not-allowed",
+          "&:hover": {
+            backgroundColor,
+          },
+          "&:focus": {
+            backgroundColor,
+            boxShadow: "none",
+          },
+          "&:active": {
+            backgroundColor,
+          },
+        }
+      : {};
   }, [disabled, type, outline]);
 
-  const blockStyles: Interpolation = useMemo(() => {
+  const blockStyles: SxStyleProp = useMemo(() => {
     return block
       ? {
           display: "flex",
@@ -154,33 +155,31 @@ export const Button: SFC<IButtonProps> = props => {
       : {};
   }, [block]);
 
-  const loadingStyles: Interpolation = useMemo(() => {
-    const backgroundColor = outline ? "" : type;
-    return getCss(
-      loading
-        ? {
-            opacity: 0.65,
-            cursor: "progress",
-            "&:hover": {
-              backgroundColor,
-            },
-            "&:focus": {
-              backgroundColor,
-              boxShadow: "none",
-            },
-            "&:active": {
-              backgroundColor,
-            },
-          }
-        : {}
-    );
+  const loadingStyles: SxStyleProp = useMemo(() => {
+    const backgroundColor = outline ? undefined : type;
+    return loading
+      ? {
+          opacity: 0.65,
+          cursor: "progress",
+          "&:hover": {
+            backgroundColor,
+          },
+          "&:focus": {
+            backgroundColor,
+            boxShadow: "none",
+          },
+          "&:active": {
+            backgroundColor,
+          },
+        }
+      : {};
   }, [loading]);
 
   const linkStyles = useMemo(() => {
     const backgroundColor = "rgba(0,0,0,0)";
     const color = "primary";
-    return link
-      ? getCss({
+    return isLink
+      ? ({
           color,
           boxShadow: "none",
           backgroundColor,
@@ -198,77 +197,73 @@ export const Button: SFC<IButtonProps> = props => {
             backgroundColor,
             color: darkenTheme(color, 0.15),
           },
-        })
+        } as SxStyleProp)
       : {};
-  }, [link]);
+  }, [isLink]);
 
   const outlineStyles = useMemo(() => {
-    return outline && !link
+    return outline && !isLink
       ? ({
           backgroundColor: "rgba(0,0,0,0)",
-          borderColor: type!,
+          borderColor: type,
           borderStyle: "solid",
           borderWidth: "1px",
-          color: type!,
+          color: type,
           "&:hover": {
-            backgroundColor: type!,
-            color: type!,
+            backgroundColor: type,
+            color: textColorTheme(type!),
           },
           "&:focus": {
-            // backgroundColor: type!,
-            color: type!,
-            // boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
-          },
-          "&:active": {
-            backgroundColor: type!,
-          },
-        } as Interpolation)
-      : {};
-  }, [outline, link, type]);
-
-  const ElementType = useMemo(() => {
-    return link ? "a" : "button";
-  }, [link]);
-
-  return (
-    <ElementType
-      href={link ? href : undefined}
-      target={link ? target : undefined}
-      css={[
-        {
-          display: "inline-flex",
-          position: "relative",
-          alignItems: "center",
-          outline: "none",
-          borderRadius: "4px",
-          transition: "all 0.3s",
-          border: "none",
-          cursor: "pointer",
-          justifyContent: "center",
-        },
-        getCss({
-          backgroundColor: type,
-          fontFamily: "body",
-          color: textColorTheme(type!),
-          "&:hover": {
-            backgroundColor: darkenTheme(type!, 0.07),
-          },
-          "&:focus": {
-            backgroundColor: darkenTheme(type!, 0.1),
+            backgroundColor: type,
+            color: textColorTheme(type!),
             boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
           },
           "&:active": {
-            backgroundColor: darkenTheme(type!, 0.15),
+            backgroundColor: type,
           },
-        }),
-        sizeStyles,
-        blockStyles,
-        linkStyles,
-        outlineStyles,
-        cssProp || {},
-        loadingStyles,
-        disabledStyles,
-      ]}
+        } as SxStyleProp)
+      : {};
+  }, [outline, isLink, type]);
+
+  const ElementType = useMemo(() => {
+    return isLink ? "a" : "button";
+  }, [isLink]);
+
+  return (
+    <ElementType
+      href={isLink ? href : undefined}
+      target={isLink ? target : undefined}
+      sx={{
+        display: "inline-flex",
+        position: "relative",
+        alignItems: "center",
+        backgroundColor: type,
+        fontFamily: "body",
+        outline: "none",
+        borderRadius: "4px",
+        transition: "all 0.3s",
+        border: "none",
+        cursor: "pointer",
+        color: textColorTheme(type!),
+        justifyContent: "center",
+        "&:hover": {
+          backgroundColor: darkenTheme(type!, 0.07),
+        },
+        "&:focus": {
+          backgroundColor: darkenTheme(type!, 0.1),
+          boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
+        },
+        "&:active": {
+          backgroundColor: darkenTheme(type!, 0.15),
+        },
+        ...sizeStyles,
+        ...blockStyles,
+        ...linkStyles,
+        ...outlineStyles,
+        ...(cssProp || {}),
+        ...loadingStyles,
+        ...disabledStyles,
+      }}
       onClick={handleClick}
     >
       {loading ? (

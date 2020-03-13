@@ -1,7 +1,10 @@
-import { SxStyleProp, Theme } from "theme-ui";
+// import { SxStyleProp } from "theme-ui";
+import { Theme } from "styled-system";
+
+export interface ITheme extends Theme {}
 
 export const BASE_COLORS = {
-  white: "#fff",
+  white: "#ffffff",
   gray100: "#f8f9fa",
   gray200: "#e9ecef",
   gray300: "#dee2e6",
@@ -11,7 +14,7 @@ export const BASE_COLORS = {
   gray700: "#495057",
   gray800: "#343a40",
   gray900: "#212529",
-  black: "#000",
+  black: "#000000",
   blue: "#007bff",
   indigo: "#6610f2",
   purple: "#6f42c1",
@@ -24,12 +27,12 @@ export const BASE_COLORS = {
   cyan: "#17a2b8",
 };
 
-const BASE_HEADING_STYLES: SxStyleProp = {
-  color: "text",
-  fontFamily: "heading",
-  lineHeight: "heading",
-  fontWeight: "heading",
-};
+// const BASE_HEADING_STYLES: SxStyleProp = {
+//   color: "text",
+//   fontFamily: "heading",
+//   lineHeight: "heading",
+//   fontWeight: "heading",
+// };
 
 /**
  * Extra small < 576px
@@ -40,7 +43,7 @@ const BASE_HEADING_STYLES: SxStyleProp = {
  */
 const DEFAULT_BREAKPOINTS = ["576px", "768px", "992px", "1200px"];
 
-export const DEAFULT_THEME: Theme = {
+export const DEFAULT_THEME: ITheme = {
   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
   fonts: {
     body: "system-ui, sans-serif",
@@ -92,76 +95,76 @@ export const DEAFULT_THEME: Theme = {
       },
     },
   },
-  styles: {
-    root: {
-      fontFamily: "body",
-      lineHeight: "body",
-      fontWeight: "body",
-      color: "text",
-      boxSizing: "border-box",
-    },
-    h1: {
-      ...BASE_HEADING_STYLES,
-      fontSize: 5,
-    },
-    h2: {
-      ...BASE_HEADING_STYLES,
-      fontSize: 4,
-    },
-    h3: {
-      ...BASE_HEADING_STYLES,
-      fontSize: 3,
-    },
-    h4: {
-      ...BASE_HEADING_STYLES,
-      fontSize: 2,
-    },
-    h5: {
-      ...BASE_HEADING_STYLES,
-      fontSize: 1,
-    },
-    h6: {
-      ...BASE_HEADING_STYLES,
-      fontSize: 0,
-    },
-    div: {
-      color: "text",
-    },
-    p: {
-      color: "text",
-      fontFamily: "body",
-      fontWeight: "body",
-      lineHeight: "body",
-    },
-    a: {
-      color: "primary",
-    },
-    pre: {
-      fontFamily: "monospace",
-      overflowX: "auto",
-      code: {
-        color: "inherit",
-      },
-    },
-    code: {
-      fontFamily: "monospace",
-      fontSize: "inherit",
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "separate",
-      borderSpacing: 0,
-    },
-    th: {
-      textAlign: "left",
-      borderBottomStyle: "solid",
-    },
-    td: {
-      textAlign: "left",
-      borderBottomStyle: "solid",
-    },
-    img: {
-      maxWidth: "100%",
-    },
-  },
+  // styles: {
+  //   root: {
+  //     fontFamily: "body",
+  //     lineHeight: "body",
+  //     fontWeight: "body",
+  //     color: "text",
+  //     boxSizing: "border-box",
+  //   },
+  //   h1: {
+  //     ...BASE_HEADING_STYLES,
+  //     fontSize: 5,
+  //   },
+  //   h2: {
+  //     ...BASE_HEADING_STYLES,
+  //     fontSize: 4,
+  //   },
+  //   h3: {
+  //     ...BASE_HEADING_STYLES,
+  //     fontSize: 3,
+  //   },
+  //   h4: {
+  //     ...BASE_HEADING_STYLES,
+  //     fontSize: 2,
+  //   },
+  //   h5: {
+  //     ...BASE_HEADING_STYLES,
+  //     fontSize: 1,
+  //   },
+  //   h6: {
+  //     ...BASE_HEADING_STYLES,
+  //     fontSize: 0,
+  //   },
+  //   div: {
+  //     color: "text",
+  //   },
+  //   p: {
+  //     color: "text",
+  //     fontFamily: "body",
+  //     fontWeight: "body",
+  //     lineHeight: "body",
+  //   },
+  //   a: {
+  //     color: "primary",
+  //   },
+  //   pre: {
+  //     fontFamily: "monospace",
+  //     overflowX: "auto",
+  //     code: {
+  //       color: "inherit",
+  //     },
+  //   },
+  //   code: {
+  //     fontFamily: "monospace",
+  //     fontSize: "inherit",
+  //   },
+  //   table: {
+  //     width: "100%",
+  //     borderCollapse: "separate",
+  //     borderSpacing: 0,
+  //   },
+  //   th: {
+  //     textAlign: "left",
+  //     borderBottomStyle: "solid",
+  //   },
+  //   td: {
+  //     textAlign: "left",
+  //     borderBottomStyle: "solid",
+  //   },
+  //   img: {
+  //     maxWidth: "100%",
+  //   },
+  // },
 };
