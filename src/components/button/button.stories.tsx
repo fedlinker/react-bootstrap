@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Button, IButtonTypeKey, IButtonSizeKey } from "./index";
 import { BrandsGithub } from "@fedlinker/font-awesome";
+import { action } from "@storybook/addon-actions";
 
-export default { title: "Button" };
+export default { title: "Button", component: Button };
 
 const types: IButtonTypeKey[] = [
   "primary",
@@ -19,7 +20,7 @@ export const buttonType = () => {
 
   return types.map(t => {
     return (
-      <Button type={t} key={t} style={{ margin }}>
+      <Button type={t} key={t} style={{ margin }} onClick={action(t)}>
         {t.toUpperCase()}
       </Button>
     );
