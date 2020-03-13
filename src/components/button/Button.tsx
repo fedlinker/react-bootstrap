@@ -8,7 +8,7 @@ import {
   darkenTheme,
 } from "../utils/colors";
 import { rotate } from "../utils/keyframes";
-import { getCss } from "../theme/use-css";
+import { getCss } from "../theme";
 
 export enum EButtonType {
   primary = "primary",
@@ -105,6 +105,28 @@ export const Button: SFC<IButtonProps> = props => {
     onClick();
   };
 
+  const typeStyles: Interpolation = useMemo(() => {
+    return getCss({
+      backgroundColor: type,
+      fontFamily: "body",
+      color: textColorTheme(type!),
+      ...(disabled || loading
+        ? {}
+        : {
+            "&:hover": {
+              backgroundColor: darkenTheme(type!, 0.07),
+            },
+            "&:focus": {
+              backgroundColor: darkenTheme(type!, 0.1),
+              boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
+            },
+            "&:active": {
+              backgroundColor: darkenTheme(type!, 0.15),
+            },
+          }),
+    });
+  }, [type]);
+
   const sizeStyles: Interpolation = useMemo(() => {
     if (size == null) {
       return getCss({
@@ -144,7 +166,6 @@ export const Button: SFC<IButtonProps> = props => {
   }, [block]);
 
   const loadingStyles: Interpolation = useMemo(() => {
-    const backgroundColor = outline ? "" : type;
     return getCss(
       loading
         ? {
@@ -229,26 +250,7 @@ export const Button: SFC<IButtonProps> = props => {
           cursor: "pointer",
           justifyContent: "center",
         },
-        getCss({
-          backgroundColor: type,
-          fontFamily: "body",
-          color: textColorTheme(type!),
-          ...(disabled || loading
-            ? {}
-            : {
-                "&:hover": {
-                  backgroundColor: darkenTheme(type!, 0.07),
-                },
-                "&:focus": {
-                  backgroundColor: darkenTheme(type!, 0.1),
-                  boxShadow: t =>
-                    `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
-                },
-                "&:active": {
-                  backgroundColor: darkenTheme(type!, 0.15),
-                },
-              }),
-        }),
+        typeStyles,
         sizeStyles,
         blockStyles,
         linkStyles,
