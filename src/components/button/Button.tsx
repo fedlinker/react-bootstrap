@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { ReactChild, SFC, useMemo } from "react";
+import { SFC, useMemo } from "react";
 import { SolidCircleNotch } from "@fedlinker/font-awesome";
 import { jsx, Interpolation } from "../index";
 import {
@@ -51,7 +51,7 @@ export interface IButtonProps {
   /**
    * text or react component in button.
    */
-  children?: ReactChild;
+  children?: React.ReactNode;
 
   /**
    * button status is loading.
@@ -124,22 +124,11 @@ export const Button: SFC<IButtonProps> = props => {
   }, [size]);
 
   const disabledStyles: Interpolation = useMemo(() => {
-    const backgroundColor = outline ? "" : type;
     return getCss(
       disabled
         ? {
             opacity: 0.65,
             cursor: "not-allowed",
-            "&:hover": {
-              backgroundColor,
-            },
-            "&:focus": {
-              backgroundColor,
-              boxShadow: "none",
-            },
-            "&:active": {
-              backgroundColor,
-            },
           }
         : {}
     );
@@ -161,16 +150,6 @@ export const Button: SFC<IButtonProps> = props => {
         ? {
             opacity: 0.65,
             cursor: "progress",
-            "&:hover": {
-              backgroundColor,
-            },
-            "&:focus": {
-              backgroundColor,
-              boxShadow: "none",
-            },
-            "&:active": {
-              backgroundColor,
-            },
           }
         : {}
     );
@@ -178,53 +157,57 @@ export const Button: SFC<IButtonProps> = props => {
 
   const linkStyles = useMemo(() => {
     const backgroundColor = "rgba(0,0,0,0)";
-    const color = "primary";
     return link
       ? getCss({
-          color,
+          color: type,
           boxShadow: "none",
           backgroundColor,
           "&:hover": {
             backgroundColor,
             textDecoration: "underline",
-            color: darkenTheme(color, 0.075),
+            color: darkenTheme(type!, 0.075),
           },
           "&:focus": {
             backgroundColor,
-            color: darkenTheme(color, 0.1),
+            color: darkenTheme(type!, 0.1),
             boxShadow: "none",
           },
           "&:active": {
             backgroundColor,
-            color: darkenTheme(color, 0.15),
+            color: darkenTheme(type!, 0.15),
           },
         })
       : {};
-  }, [link]);
+  }, [link, type]);
 
   const outlineStyles = useMemo(() => {
     return outline && !link
-      ? ({
+      ? getCss({
           backgroundColor: "rgba(0,0,0,0)",
           borderColor: type!,
           borderStyle: "solid",
           borderWidth: "1px",
           color: type!,
-          "&:hover": {
-            backgroundColor: type!,
-            color: type!,
-          },
-          "&:focus": {
-            // backgroundColor: type!,
-            color: type!,
-            // boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
-          },
-          "&:active": {
-            backgroundColor: type!,
-          },
-        } as Interpolation)
+          ...(disabled || loading
+            ? {}
+            : {
+                "&:hover": {
+                  backgroundColor: type!,
+                  color: textColorTheme(type!),
+                },
+                "&:focus": {
+                  backgroundColor: type!,
+                  color: textColorTheme(type!),
+                  boxShadow: t =>
+                    `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
+                },
+                "&:active": {
+                  backgroundColor: type!,
+                },
+              }),
+        })
       : {};
-  }, [outline, link, type]);
+  }, [outline, link, type, disabled]);
 
   const ElementType = useMemo(() => {
     return link ? "a" : "button";
@@ -250,16 +233,21 @@ export const Button: SFC<IButtonProps> = props => {
           backgroundColor: type,
           fontFamily: "body",
           color: textColorTheme(type!),
-          "&:hover": {
-            backgroundColor: darkenTheme(type!, 0.07),
-          },
-          "&:focus": {
-            backgroundColor: darkenTheme(type!, 0.1),
-            boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
-          },
-          "&:active": {
-            backgroundColor: darkenTheme(type!, 0.15),
-          },
+          ...(disabled || loading
+            ? {}
+            : {
+                "&:hover": {
+                  backgroundColor: darkenTheme(type!, 0.07),
+                },
+                "&:focus": {
+                  backgroundColor: darkenTheme(type!, 0.1),
+                  boxShadow: t =>
+                    `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
+                },
+                "&:active": {
+                  backgroundColor: darkenTheme(type!, 0.15),
+                },
+              }),
         }),
         sizeStyles,
         blockStyles,
@@ -273,7 +261,7 @@ export const Button: SFC<IButtonProps> = props => {
     >
       {loading ? (
         <SolidCircleNotch
-          sx={{
+          css={{
             marginRight: "3px",
             animation: `${rotate} 1s linear infinite`,
           }}
