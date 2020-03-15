@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback } from "react";
+import React, { createContext, useContext } from "react";
 import { ITheme, DEFAULT_THEME } from "../theme";
 
 export interface IConfig {
@@ -27,26 +27,6 @@ export const useConfig = (): [IConfig, IConfigSetFunc] => {
 };
 
 /**
- * theme context hooks
- */
-export const useTheme = (): [ITheme, IConfigThemeSetFunc] => {
-  const [config, setConfig] = useConfig();
-  const setTheme: IConfigThemeSetFunc = useCallback(
-    (newTheme = {}) => {
-      setConfig({
-        ...config,
-        theme: {
-          ...config.theme,
-          ...newTheme,
-        },
-      });
-    },
-    [config]
-  );
-  return [config.theme, setTheme];
-};
-
-/**
  * HOC to inject config context value
  * @param Comp component
  */
@@ -56,20 +36,5 @@ export const withConfig = <P extends IConfigContext>(
   return (props: P) => {
     const [config, setConfig] = useConfig();
     return <Comp config={config} setConfig={setConfig} {...props} />;
-  };
-};
-
-/**
- * HOC to inject theme value
- * @param Comp
- */
-export const withTheme = <
-  P extends { theme: ITheme; setTheme: IConfigThemeSetFunc }
->(
-  Comp: React.ComponentType<P>
-) => {
-  return (props: P) => {
-    const [theme, setTheme] = useTheme();
-    return <Comp theme={theme} setTheme={setTheme} {...props} />;
   };
 };

@@ -1,2 +1,2 @@
-export * from "./ConfigProvider";
-export * from "./ConfigContext";
+export * from "./config-provider";
+export * from "./config-context";

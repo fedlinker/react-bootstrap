@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, IButtonTypeKey, IButtonSizeKey } from "./index";
 import { BrandsGithub } from "@fedlinker/font-awesome";
 import { action } from "@storybook/addon-actions";
+import { boolean } from "@storybook/addon-knobs";
 
 export default { title: "Button", component: Button };
 
@@ -70,7 +71,12 @@ export const disabledState = () => {
       <div>
         {types.map(t => {
           return (
-            <Button type={t} key={t} style={{ margin }} disabled>
+            <Button
+              type={t}
+              key={t}
+              style={{ margin }}
+              disabled={boolean("disabled", true)}
+            >
               {t.toUpperCase()}
             </Button>
           );
@@ -117,17 +123,11 @@ export const blockState = () => {
 };
 
 export const loadingState = () => {
-  const [loading, setLoading] = useState(true);
+  const loading = boolean("loading", true);
   var margin = "12px";
-  const handleLoadingChange = () => {
-    setLoading(!loading);
-  };
   return (
     <div>
-      <div>
-        Button status: {loading ? "Loading" : "Not loading"}{" "}
-        <Button onClick={handleLoadingChange}>Change Status</Button>
-      </div>
+      <div>Button status: {loading ? "Loading" : "Not loading"} </div>
       <div>
         {types.map(t => {
           return (

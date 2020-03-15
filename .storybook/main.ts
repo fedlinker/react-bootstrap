@@ -23,7 +23,6 @@ module.exports = {
     "@storybook/addon-knobs",
     "@storybook/addon-viewport",
     "@storybook/addon-backgrounds",
-    "@storybook/addon-jest",
     "@storybook/addon-storysource",
     "@storybook/addon-a11y",
     "@storybook/addon-options",

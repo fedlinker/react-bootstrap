@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { ThemeProvider } from "../theme/theme-provider";
 import { ITheme, DEFAULT_THEME } from "../theme/default-theme";
-import { ConfigContext, IConfig } from "./ConfigContext";
+import { ConfigContext, IConfig } from "./config-context";
 
 export interface IConfigProviderProps {
   config?: Partial<IConfig>;
