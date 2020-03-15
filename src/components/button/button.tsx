@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { SFC, useMemo } from "react";
+import { SFC, useMemo, forwardRef, ReactHTML } from "react";
 import { SolidCircleNotch } from "@fedlinker/font-awesome";
 import { jsx, Interpolation } from "../index";
 import {
@@ -83,7 +83,10 @@ export interface IButtonProps {
   link?: boolean;
 }
 
-export const Button: SFC<IButtonProps> = props => {
+export const Button = forwardRef<
+  HTMLButtonElement | HTMLLinkElement,
+  IButtonProps
+>((props, ref) => {
   const {
     style: cssProp,
     type,
@@ -236,6 +239,7 @@ export const Button: SFC<IButtonProps> = props => {
 
   return (
     <ElementType
+      ref={ref as any}
       href={link ? href : undefined}
       target={link ? target : undefined}
       css={[
@@ -249,6 +253,7 @@ export const Button: SFC<IButtonProps> = props => {
           border: "none",
           cursor: "pointer",
           justifyContent: "center",
+          verticalAlign: "middle",
         },
         typeStyles,
         sizeStyles,
@@ -272,7 +277,7 @@ export const Button: SFC<IButtonProps> = props => {
       {children}
     </ElementType>
   );
-};
+});
 
 Button.defaultProps = {
   type: "light",
