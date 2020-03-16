@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from "react";
-import { ITheme, DEFAULT_THEME } from "../theme";
+import { ITheme, DEFAULT_THEME, IColorsType } from "../theme";
 
 export interface IConfig {
-  theme: ITheme;
+  theme: Omit<ITheme, "colors"> & { colors: Partial<IColorsType> };
 }
 export type IConfigSetFunc = (config: Partial<IConfig>) => any;
 export type IConfigThemeSetFunc = (theme: Partial<ITheme>) => any;

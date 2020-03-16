@@ -1,12 +1,8 @@
 import { Theme } from "styled-system";
-import { IColorMode, BASE_COLORS } from "./color-mode";
+import { DEFAULT_COLOR_MODE, IColorsType } from "./color-mode";
 
 export interface ITheme extends Omit<Theme, "colors"> {
-  colors: IColorMode & {
-    modes?: {
-      [key: string]: IColorMode;
-    };
-  };
+  colors: IColorsType;
 }
 
 /**
@@ -72,38 +68,5 @@ export const DEFAULT_THEME: ITheme = {
     lg: "0.3rem",
     pill: "50rem",
   },
-  colors: {
-    text: BASE_COLORS.gray900,
-    secondary: BASE_COLORS.gray600,
-    background: BASE_COLORS.white,
-    primary: BASE_COLORS.blue,
-    success: BASE_COLORS.green,
-    warning: BASE_COLORS.yellow,
-    danger: BASE_COLORS.red,
-    info: BASE_COLORS.cyan,
-    light: BASE_COLORS.gray100,
-    dark: BASE_COLORS.gray800,
-    border: BASE_COLORS.gray300,
-    input: BASE_COLORS.gray700,
-    inputBorder: BASE_COLORS.gray400,
-    placeholder: BASE_COLORS.gray600,
-    modes: {
-      dark: {
-        text: BASE_COLORS.white,
-        secondary: BASE_COLORS.gray600,
-        background: BASE_COLORS.gray900,
-        primary: BASE_COLORS.blue,
-        success: BASE_COLORS.green,
-        warning: BASE_COLORS.orange,
-        danger: BASE_COLORS.red,
-        info: BASE_COLORS.cyan,
-        light: BASE_COLORS.gray100,
-        dark: BASE_COLORS.gray800,
-        border: BASE_COLORS.gray700,
-        input: BASE_COLORS.gray700,
-        inputBorder: BASE_COLORS.gray400,
-        placeholder: BASE_COLORS.gray600,
-      },
-    },
-  },
+  colors: DEFAULT_COLOR_MODE,
 };
