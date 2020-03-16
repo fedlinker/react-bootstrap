@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { SFC, useMemo, forwardRef, ReactHTML } from "react";
+import { useMemo, forwardRef } from "react";
 import { SolidCircleNotch } from "@fedlinker/font-awesome";
 import { jsx, Interpolation } from "../index";
 import {

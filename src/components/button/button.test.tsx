@@ -3,9 +3,14 @@ import renderer from "react-test-renderer";
 import { Button } from "./index";
 
 describe("<Button />", () => {
-  test("prop link", () => {
+  test("prop link works", () => {
     const component = renderer.create(<Button link>button</Button>);
-    const tree = component.toJSON();
-    expect(tree?.type).toEqual("a");
+    const link = component.toJSON();
+    expect(link?.type).toEqual("a");
+
+    component.update(<Button>button</Button>);
+    const button = component.toJSON();
+    // wrapper tag is button when link is false
+    expect(button?.type).toEqual("button");
   });
 });
