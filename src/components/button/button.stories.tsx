@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, IButtonTypeKey, IButtonSizeKey } from "./index";
 import { BrandsGithub } from "@fedlinker/font-awesome";
 import { action } from "@storybook/addon-actions";
