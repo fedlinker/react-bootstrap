@@ -127,20 +127,13 @@ export const Button = forwardRef<
   }, [type]);
 
   const sizeStyles: Interpolation = useMemo(() => {
-    if (size == null) {
-      return getCss({
-        padding: 3,
-        paddingTop: 2,
-        paddingBottom: 2,
-        fontSize: 2,
-      });
-    }
     const isSm = size === "sm";
+    const isLg = size === "lg";
     return getCss({
-      padding: isSm ? 2 : 4,
-      paddingTop: isSm ? 1 : 2,
-      paddingBottom: isSm ? 1 : 2,
-      fontSize: isSm ? 1 : 3,
+      padding: isLg ? 4 : isSm ? 2 : 3,
+      paddingTop: isLg ? 2 : isSm ? 1 : 2,
+      paddingBottom: isLg ? 2 : isSm ? 1 : 2,
+      fontSize: isLg ? 3 : isSm ? 1 : 2,
     });
   }, [size]);
 
@@ -276,4 +269,5 @@ export const Button = forwardRef<
 Button.defaultProps = {
   type: "light",
   outline: false,
+  size: "default",
 };
