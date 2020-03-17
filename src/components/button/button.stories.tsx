@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, IButtonTypeKey, IButtonSizeKey } from "./index";
+import { Button, IButtonTypeKey } from "./index";
 import { BrandsGithub } from "@fedlinker/font-awesome";
 import { action } from "@storybook/addon-actions";
 import { boolean } from "@storybook/addon-knobs";
+import { ISizeType } from "../enum/size";
 
 export default { title: "Button", component: Button };
 
@@ -43,7 +44,7 @@ export const linkButton = () => {
 
 export const buttonSize = () => {
   var margin = "12px";
-  const sizes: Array<IButtonSizeKey | undefined> = [undefined, "lg", "sm"];
+  const sizes: Array<ISizeType> = ["default", "lg", "sm"];
   return sizes.map((size, index) => {
     return (
       <Button size={size} key={index} type="primary" style={{ margin }}>

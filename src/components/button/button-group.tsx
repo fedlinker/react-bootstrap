@@ -2,11 +2,12 @@
 import React from "react";
 import { jsx } from "..";
 import map from "lodash/map";
-import { IButtonSizeKey, IButtonProps, IButtonTypeKey } from "./button";
+import { IButtonProps, IButtonTypeKey } from "./button";
 import { Interpolation } from "../theme";
+import { ISizeType } from "../enum/size";
 
 export interface IButtonGroupProps {
-  size?: IButtonSizeKey;
+  size?: ISizeType;
   style?: Interpolation;
   type?: IButtonTypeKey;
   outline?: boolean;

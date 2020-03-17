@@ -9,6 +9,7 @@ import {
 } from "../utils/colors";
 import { rotate } from "../utils/keyframes";
 import { getCss } from "../theme";
+import { ISizeType } from "../enum/size";
 
 export enum EButtonType {
   primary = "primary",
@@ -20,12 +21,6 @@ export enum EButtonType {
   dark = "dark",
 }
 export type IButtonTypeKey = keyof typeof EButtonType;
-
-enum EButtonSize {
-  lg = "lg",
-  sm = "sm",
-}
-export type IButtonSizeKey = keyof typeof EButtonSize;
 
 export interface IButtonProps {
   /**
@@ -41,7 +36,7 @@ export interface IButtonProps {
   /**
    * button size.
    */
-  size?: IButtonSizeKey;
+  size?: ISizeType;
 
   /**
    * button is disable or not.
@@ -121,7 +116,8 @@ export const Button = forwardRef<
             },
             "&:focus": {
               backgroundColor: darkenTheme(type!, 0.1),
-              boxShadow: t => `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
+              boxShadow: t =>
+                `0 0 0 ${t.radii.sm} ${transparentizeTheme(type!, 0.5)(t)}`,
             },
             "&:active": {
               backgroundColor: darkenTheme(type!, 0.15),
@@ -222,8 +218,6 @@ export const Button = forwardRef<
                 "&:focus": {
                   backgroundColor: type!,
                   color: textColorTheme(type!),
-                  boxShadow: t =>
-                    `0 0 0 3px ${transparentizeTheme(type!, 0.5)(t)}`,
                 },
                 "&:active": {
                   backgroundColor: type!,
