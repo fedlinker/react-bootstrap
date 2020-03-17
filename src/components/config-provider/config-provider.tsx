@@ -6,6 +6,7 @@ import {
   ColorModeProvider,
   useColorMode,
   IColorModeProps,
+  DEFAULT_COLOR_MODE_VALUE,
 } from "../theme/color-mode/color-mode-context";
 import { IColorMode } from "../theme";
 
@@ -24,11 +25,11 @@ export const ConfigBase: React.SFC<IConfigBaseProps> = function(props) {
       ...(configProp?.theme?.colors || {}),
     };
     return {
-      default: defaultColors,
+      [DEFAULT_COLOR_MODE_VALUE]: defaultColors,
       ...(configProp?.theme?.colors.modes || {}),
       ...(defaultModes || {}),
     } as { [key: string]: IColorMode };
-  }, [colorMode, configProp]);
+  }, [configProp]);
 
   const [config, changeConfig] = useState<IConfig>({
     theme: {
@@ -53,7 +54,7 @@ export const ConfigBase: React.SFC<IConfigBaseProps> = function(props) {
         colors: colors[colorMode] || DEFAULT_THEME.colors,
       },
     });
-  }, [colors]);
+  }, [colors, colorMode]);
 
   return (
     <ConfigContext.Provider value={{ config, setConfig }}>
