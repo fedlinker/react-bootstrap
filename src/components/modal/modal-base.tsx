@@ -27,7 +27,7 @@ export interface IModalBaseProps {
   onExited?(): void;
 }
 
-const DURATION_TIME = 400;
+const DURATION_TIME = 300;
 
 export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
   (props, ref) => {
@@ -60,7 +60,6 @@ export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
       transform: open
         ? "translate3d(-50%, -50%, 0)"
         : "translate3d(-50%, -100%, 0)",
-      delay: open ? 0 : 100,
       config: {
         duration: DURATION_TIME,
         easing: easeBackOut,
@@ -114,13 +113,13 @@ export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
                   transform: "translate3d(-50%, -50%, 0)",
                   zIndex: 1000,
                   maxHeight: "80%",
-                  width: "600px",
                 },
                 getCss({
                   backgroundColor: "background",
                   borderRadius: "sm",
                   border: "1px solid",
                   borderColor: "border",
+                  width: ["90%", "600px", "720px"],
                 }),
               ]}
             >

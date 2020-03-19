@@ -17,7 +17,7 @@ export const ModalbaseUsage = () => {
         Open Modal
       </Button>
       <ModalBase open={open} onClose={() => setOpen(false)}>
-        <div>I'am is Modal base</div>
+        <div>I'm Modal base</div>
       </ModalBase>
     </div>
   );
@@ -46,7 +46,7 @@ export const ModalUsage = () => {
         onExit={action("onExit")}
         onExited={action("onExited")}
       >
-        <div>I'am is Modal base</div>
+        <div>I'm Modal base</div>
       </Modal>
     </div>
   );
