@@ -69,4 +69,5 @@ export const DEFAULT_THEME: ITheme = {
     pill: "50rem",
   },
   colors: DEFAULT_COLOR_MODE,
+  zIndices: {},
 };
