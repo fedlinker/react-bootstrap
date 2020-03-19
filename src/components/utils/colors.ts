@@ -25,42 +25,42 @@ const g = (t: ITheme, c: string) => {
     .replace(/\)/, "");
 };
 
-export const darkenTheme = (c: string, n: number) => (t: object) =>
+export const darkenTheme = (c: string, n: number) => (t: ITheme) =>
   darken(n, g(t, c));
-export const lightenTheme = (c: string, n: number) => (t: object) =>
+export const lightenTheme = (c: string, n: number) => (t: ITheme) =>
   lighten(n, g(t, c));
-export const rotateTheme = (c: string, d: number) => (t: object) =>
+export const rotateTheme = (c: string, d: number) => (t: ITheme) =>
   adjustHue(d, g(t, c));
 
-export const hueTheme = (c: string, h: number) => (t: object) =>
+export const hueTheme = (c: string, h: number) => (t: ITheme) =>
   setHue(h, g(t, c));
-export const saturationTheme = (c: string, s: number | string) => (t: object) =>
+export const saturationTheme = (c: string, s: number | string) => (t: ITheme) =>
   setSaturation(s, g(t, c));
-export const lightnessTheme = (c: string, l: string | number) => (t: object) =>
+export const lightnessTheme = (c: string, l: string | number) => (t: ITheme) =>
   setLightness(l, g(t, c));
 
-export const desaturateTheme = (c: string, n: number) => (t: object) =>
+export const desaturateTheme = (c: string, n: number) => (t: ITheme) =>
   desaturate(n, g(t, c));
-export const saturateTheme = (c: string, n: number) => (t: object) =>
+export const saturateTheme = (c: string, n: number) => (t: ITheme) =>
   saturate(n, g(t, c));
 
-export const shadeTheme = (c: string, n: number) => (t: object) =>
+export const shadeTheme = (c: string, n: number) => (t: ITheme) =>
   shade(n, g(t, c));
-export const tintTheme = (c: string, n: number) => (t: object) =>
+export const tintTheme = (c: string, n: number) => (t: ITheme) =>
   tint(n, g(t, c));
 
-export const transparentizeTheme = (c: string, n: number) => (t: object) =>
+export const transparentizeTheme = (c: string, n: number) => (t: ITheme) =>
   transparentize(n, g(t, c));
-export const alphaTheme = (c: string, n: number) => (t: object) =>
+export const alphaTheme = (c: string, n: number) => (t: ITheme) =>
   rgba(g(t, c), n);
 
-export const mixTheme = (a: string, b: string, n = 0.5) => (t: object) =>
+export const mixTheme = (a: string, b: string, n = 0.5) => (t: ITheme) =>
   mix(n, g(t, a), g(t, b));
 
-export const complementTheme = (c: string) => (t: object) => {
+export const complementTheme = (c: string) => (t: ITheme) => {
   return complement(g(t, c));
 };
-export const invertTheme = (c: string) => (t: object) => invert(g(t, c));
+export const invertTheme = (c: string) => (t: ITheme) => invert(g(t, c));
 
 export const grayscaleTheme = (c: string, n: number) => desaturateTheme(c, 1);
 
@@ -68,7 +68,7 @@ export const grayscaleTheme = (c: string, n: number) => desaturateTheme(c, 1);
  * get the text color of the theme color type
  * @param color theme color type
  */
-export const textColorTheme = (color: string) => (t: object) => {
+export const textColorTheme = (color: string) => (t: ITheme) => {
   return textColor(g(t, color));
 };
 

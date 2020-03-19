@@ -21,6 +21,7 @@ export enum EButtonType {
   dark = "dark",
 }
 export type IButtonTypeKey = keyof typeof EButtonType;
+export type IButtonSizeKey = ISizeType;
 
 export interface IButtonProps {
   /**
