@@ -71,7 +71,7 @@ export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
       return getCss({
         width: "100%",
         height: "100%",
-        position: "absolute",
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
@@ -135,6 +135,7 @@ export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
                   getCss({
                     backgroundColor: "#000",
                     zIndex: 999,
+                    position: "absolute",
                   }),
                   maskStyle,
                 ]}

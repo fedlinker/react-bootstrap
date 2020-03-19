@@ -67,6 +67,7 @@ export const CustomizeButton = () => {
         noBtnText="Close"
         yesBtnProps={{ loading: true }}
         yesBtnText="Save changes"
+        maskClosable={false}
       >
         <div>I'am is Modal base</div>
       </Modal>
