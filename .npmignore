@@ -1,6 +1,8 @@
 src/
-.docz/
-gatsby-node.js
 yarn.lock
-doczrc.js
+yarn-error.log
 tsconfig.json
+.storybook/
+babel.config.js
+setupTests.js
+jest.config.js
