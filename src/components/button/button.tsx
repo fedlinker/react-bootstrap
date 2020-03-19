@@ -97,7 +97,7 @@ export const Button = forwardRef<
     link,
   } = props;
   const handleClick = () => {
-    if (loading || !onClick) {
+    if (loading || !onClick || disabled) {
       return;
     }
     onClick();
