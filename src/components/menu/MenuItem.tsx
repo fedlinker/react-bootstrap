@@ -1,32 +1,33 @@
 /** @jsx jsx */
 import React from "react";
-import { jsx } from "theme-ui";
+import { jsx, getCss } from "../theme";
 import { transparentizeTheme } from "../utils/colors";
 
-interface IMenuItemProps {
+export interface IMenuItemProps {
   path: string;
   level?: number;
   onClick?(path: string): void;
   children?: React.ReactNode;
 }
 
-const MenuItem: React.SFC<IMenuItemProps> = props => {
+export const MenuItem: React.SFC<IMenuItemProps> = props => {
   const { children, path, onClick, level } = props;
   return (
     <div
-      sx={{
+      css={getCss({
         color: "text",
         boxSizing: "border-box",
         paddingLeft: `${8 + 12 * level!}px`,
         lineHeight: "64px",
-        borderBottom: t => `1px solid ${t.colors.border}`,
+        borderBottom: `1px solid`,
+        borderBottomColor: "border",
         cursor: "pointer",
         transition: "all 0.3s",
         "&:hover": {
           color: "primary",
           backgroundColor: transparentizeTheme("primary", 0.95),
         },
-      }}
+      })}
       onClick={() => onClick && onClick(path)}
     >
       {children}
@@ -37,5 +38,3 @@ const MenuItem: React.SFC<IMenuItemProps> = props => {
 MenuItem.defaultProps = {
   level: 1,
 };
-
-export default MenuItem;

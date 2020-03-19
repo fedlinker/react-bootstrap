@@ -20,7 +20,7 @@ The components developed path is `/src/components`.
 
 All the components are built with these dependencies below:
 
-- `@emotion/core`: **css-in-js** library.
+- `@emotion/react`: **css-in-js** library.
 - `styled-system`: support theme function with emotion.
 - `polished`: color transformer.
 - `@fedlinker/font-awesome`: react components of font-awesome icons.

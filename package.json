@@ -10,7 +10,8 @@
     "storybook": "start-storybook",
     "gen-changelog": "npm run changelog && git add . && git commit -m 'docs(changelog): update CHANGELOG.md' && git push && git push --tags",
     "changelog": "conventional-changelog -n ./node_modules/@codoonfxd/changelog-config/index.js -i CHANGELOG.md -s -r 0",
-    "test": "jest"
+    "test": "jest",
+    "type-check": "tsc -p ./tsconfig.json --noEmit"
   },
   "repository": {
     "type": "git",
@@ -33,16 +34,18 @@
   },
   "homepage": "https://github.com/fedlinker/react-bootstrap#readme",
   "dependencies": {
-    "@emotion/react": "^11.0.0-next.10",
+    "@emotion/react": "^11.0.0-next.12",
     "@fedlinker/font-awesome": "^0.4.2",
+    "@styled-system/css": "^5.1.5",
     "d3-ease": "^1.0.6",
+    "formik": "^2.1.4",
     "lodash": "^4.17.15",
     "polished": "^3.4.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-spring": "^8.0.27",
     "styled-system": "^5.1.5",
-    "theme-ui": "^0.3.1"
+    "yup": "^0.28.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
@@ -71,7 +74,8 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@types/react-test-renderer": "^16.9.2",
-    "@types/theme-ui": "^0.2.6",
+    "@types/styled-system": "^5.1.9",
+    "@types/styled-system__css": "^5.0.6",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
     "babel-preset-react-app": "^9.1.1",
@@ -84,7 +88,6 @@
     "jest": "^25.1.0",
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1",
-    "prettier-quick": "^0.0.5",
     "pretty-quick": "^2.0.1",
     "react-docgen-typescript-loader": "^3.7.1",
     "react-test-renderer": "^16.13.0",

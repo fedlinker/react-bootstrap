@@ -5,7 +5,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "declaration": true,
     "outDir": "./lib",
     "jsx": "react",

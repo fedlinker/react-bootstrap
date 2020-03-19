@@ -1,20 +1,20 @@
 /** @jsx jsx */
 import React from "react";
-import { jsx } from "theme-ui";
+import { jsx, getCss } from "../theme";
 import { SolidAngleDown } from "@fedlinker/font-awesome";
 
-interface ISubMenuProps {
+export interface ISubMenuProps {
   title: React.ReactNode;
   level?: number;
   children?: React.ReactNode;
 }
 
-const SubMenu: React.SFC<ISubMenuProps> = props => {
+export const SubMenu: React.SFC<ISubMenuProps> = props => {
   const { title, children, level } = props;
   return (
-    <div sx={{}}>
+    <div>
       <div
-        sx={{
+        css={getCss({
           boxSizing: "border-box",
           paddingLeft: `${8 + 12 * level!}px`,
           paddingRight: "8px",
@@ -22,13 +22,14 @@ const SubMenu: React.SFC<ISubMenuProps> = props => {
           display: "flex",
           color: "text",
           transition: "all 0.3s",
-          borderBottom: t => `1px solid ${t.colors.border}`,
+          borderBottom: "1px solid",
+          borderBottomColor: "border",
           "&:hover": {
             color: "primary",
           },
-        }}
+        })}
       >
-        <div sx={{ flex: 1 }}>{title}</div>
+        <div css={{ flex: 1 }}>{title}</div>
         <SolidAngleDown />
       </div>
       {React.Children.map(children, (c, i) => {
@@ -43,5 +44,3 @@ const SubMenu: React.SFC<ISubMenuProps> = props => {
 SubMenu.defaultProps = {
   level: 1,
 };
-
-export default SubMenu;

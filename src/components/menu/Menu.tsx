@@ -1,30 +1,35 @@
-import React, { CSSProperties, SFC, useState } from "react";
+/** @jsx jsx */
+import React, { SFC, useState } from "react";
+import { jsx, getCss, Interpolation } from "../theme";
 
 export interface IMenuProps {
-  style?: CSSProperties;
+  style?: Interpolation;
   children?: React.ReactNode;
 }
 
-const Menu: SFC<IMenuProps> = props => {
+export const Menu: SFC<IMenuProps> = props => {
   const { style, children } = props;
   const [baseProps] = useState({ level: 1 });
   return (
     <div
-      sx={{
-        width: "100%",
-        color: "text",
-        fontSize: 2,
-        backgroundColor: "background",
-        ...(style || {}),
-      }}
+      css={[
+        getCss({
+          width: "100%",
+          color: "text",
+          fontSize: 2,
+          backgroundColor: "background",
+        }),
+        style,
+      ]}
     >
       {React.Children.map(children, (c, i) => {
-        return React.cloneElement(c as React.ReactElement, { ...baseProps });
+        return React.cloneElement(c as React.ReactElement, {
+          key: i,
+          ...baseProps,
+        });
       })}
     </div>
   );
 };
 
 Menu.defaultProps = {};
-
-export default Menu;
