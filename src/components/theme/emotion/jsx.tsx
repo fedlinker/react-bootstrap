@@ -2,9 +2,10 @@
 import * as React from "react";
 import { withEmotionCache } from "@emotion/react";
 import { ThemeContext } from "../theme-context";
-import { getRegisteredStyles, insertStyles, isBrowser } from "@emotion/utils";
+import { getRegisteredStyles, insertStyles } from "@emotion/utils";
 import { serializeStyles } from "@emotion/serialize";
 
+const isBrowser = typeof document !== "undefined";
 // those identifiers come from error stacks, so they have to be valid JS identifiers
 // thus we only need to replace what is a valid character for JS, but not for CSS
 const sanitizeIdentifier = (identifier: string) =>

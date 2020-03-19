@@ -4,3 +4,5 @@ export * from "./menu";
 export * from "./layout";
 export * from "./utils/colors";
 export * from "./theme";
+export * from "./portal";
+export * from "./modal";
