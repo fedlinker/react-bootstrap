@@ -7,10 +7,12 @@ import { Portal } from "../portal";
 import { IPlacementType } from "../enum/placement";
 import { jsx, Interpolation } from "../theme";
 
+export type IPopperTriggerType = "hover" | "click";
+
 export interface IPopperProps {
   placement?: IPlacementType;
   content: React.ReactNode;
-  trigger?: "hover" | "click";
+  trigger?: IPopperTriggerType;
   children: React.ReactNode;
 }
 
