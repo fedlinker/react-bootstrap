@@ -1,4 +1,5 @@
 module.exports = {
+  port: 30000,
   stories: ["../src/**/*.stories.tsx"],
   webpackFinal: async config => {
     config.module.rules.push({
