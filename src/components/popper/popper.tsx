@@ -10,7 +10,7 @@ import { jsx, Interpolation } from "../theme";
 export interface IPopperProps {
   placement?: IPlacementType;
   content: React.ReactNode;
-  trigger?: "hover" | "focus" | "click" | "contextMenu";
+  trigger?: "hover" | "click";
   children: React.ReactNode;
 }
 
@@ -23,7 +23,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
   const [chRect, setchRect] = React.useState<DOMRect | null>(null);
   // content rect
   // const [coRect, setCoRect] = React.useState<DOMRect | null>(null);
-  const [scrollRect, setScrollRect] = React.useState<{
+  const [sRect, setSRect] = React.useState<{
     x: number;
     y: number;
   }>({ x: 0, y: 0 });
@@ -42,81 +42,83 @@ export const Popper: React.SFC<IPopperProps> = props => {
   const contentRef = React.useRef<HTMLElement>();
 
   const childrenPosition = React.useMemo<Interpolation>(() => {
-    if (!chRect) {
-      return { top: 0, left: 0 };
+    let vals: Interpolation = { top: 0, left: 0 };
+    if (chRect) {
+      switch (placement) {
+        case "top":
+          vals = {
+            top: chRect.top,
+            left: chRect.left,
+            transform: `translate3d(calc(${chRect.width / 2}px - 50%),-100%,0)`,
+          };
+        case "topLeft":
+          vals = {
+            top: chRect.top,
+            left: chRect.left,
+            transform: `translate3d(0,-100%,0)`,
+          };
+        case "topRight":
+          vals = {
+            top: chRect.top,
+            left: chRect.left + chRect.width,
+            transform: `translate3d(-100%,-100%,0)`,
+          };
+        case "bottom":
+          vals = {
+            top: chRect.top + chRect.height,
+            left: chRect.left,
+            transform: `translate3d(calc(${chRect.width / 2}px - 50%),0,0)`,
+          };
+        case "bottomLeft":
+          vals = { top: chRect.top + chRect.height, left: chRect.left };
+        case "bottomRight":
+          vals = {
+            top: chRect.top + chRect.height,
+            left: chRect.left + chRect.width,
+            transform: `translate3d(-100%,0,0)`,
+          };
+        case "left":
+          vals = {
+            top: chRect.top,
+            left: chRect.left,
+            transform: `translate3d(-100%,calc(${chRect.height /
+              2}px - 50%),0)`,
+          };
+        case "leftBottom":
+          vals = {
+            top: chRect.top + chRect.height,
+            left: chRect.left,
+            transform: `translate3d(-100%,-100%,0)`,
+          };
+        case "leftTop":
+          vals = {
+            top: chRect.top,
+            left: chRect.left,
+            transform: `translate3d(-100%,0,0)`,
+          };
+        case "right":
+          vals = {
+            top: chRect.top,
+            left: chRect.left + chRect.width,
+            transform: `translate3d(0,calc(${chRect.height / 2}px - 50%),0)`,
+          };
+        case "rightBottom":
+          vals = {
+            top: chRect.top + chRect.height,
+            left: chRect.left + chRect.width,
+            transform: `translate3d(0,-100%,0)`,
+          };
+        case "rightTop":
+          vals = {
+            top: chRect.top,
+            left: chRect.left + chRect.width,
+          };
+      }
+      (vals.top as number) += sRect.y;
+      (vals.left as number) += sRect.x;
     }
-    switch (placement) {
-      case "top":
-        return {
-          top: chRect.top,
-          left: chRect.left,
-          transform: `translate3d(calc(${chRect.width / 2}px - 50%),-100%,0)`,
-        };
-      case "topLeft":
-        return {
-          top: chRect.top,
-          left: chRect.left,
-          transform: `translate3d(0,-100%,0)`,
-        };
-      case "topRight":
-        return {
-          top: chRect.top,
-          left: chRect.left + chRect.width,
-          transform: `translate3d(-100%,-100%,0)`,
-        };
-      case "bottom":
-        return {
-          top: chRect.top + chRect.height,
-          left: chRect.left,
-          transform: `translate3d(calc(${chRect.width / 2}px - 50%),0,0)`,
-        };
-      case "bottomLeft":
-        return { top: chRect.top + chRect.height, left: chRect.left };
-      case "bottomRight":
-        return {
-          top: chRect.top + chRect.height,
-          left: chRect.left + chRect.width,
-          transform: `translate3d(-100%,0,0)`,
-        };
-      case "left":
-        return {
-          top: chRect.top,
-          left: chRect.left,
-          transform: `translate3d(-100%,calc(${chRect.height / 2}px - 50%),0)`,
-        };
-      case "leftBottom":
-        return {
-          top: chRect.top + chRect.height,
-          left: chRect.left,
-          transform: `translate3d(-100%,-100%,0)`,
-        };
-      case "leftTop":
-        return {
-          top: chRect.top,
-          left: chRect.left,
-          transform: `translate3d(-100%,0,0)`,
-        };
-      case "right":
-        return {
-          top: chRect.top,
-          left: chRect.left + chRect.width,
-          transform: `translate3d(0,calc(${chRect.height / 2}px - 50%),0)`,
-        };
-      case "rightBottom":
-        return {
-          top: chRect.top + chRect.height,
-          left: chRect.left + chRect.width,
-          transform: `translate3d(0,-100%,0)`,
-        };
-      case "rightTop":
-        return {
-          top: chRect.top,
-          left: chRect.left + chRect.width,
-        };
-      default:
-        return { top: chRect.top, left: chRect.left };
-    }
-  }, [chRect, scrollRect, placement]);
+    return vals;
+  }, [chRect, sRect, placement]);
 
   React.useEffect(() => {
     const handleTriggerEvent = (e: Event) => {
@@ -136,12 +138,19 @@ export const Popper: React.SFC<IPopperProps> = props => {
         const isContained =
           (childrenRef.current && childrenRef.current.contains(e.target)) ||
           (contentRef.current && contentRef.current.contains(e.target));
+
+        // get document scroll top
+        const d = childrenRef.current?.ownerDocument?.documentElement;
+        const newSRect = { x: d?.scrollLeft || 0, y: d?.scrollTop || 0 };
+        if (!isEqual(newSRect, sRect)) {
+          setSRect(newSRect);
+        }
+
         if (isContained) {
+          e.preventDefault();
           if (visible && mount) {
             return;
           }
-          const d = childrenRef.current?.ownerDocument?.documentElement;
-          setScrollRect({ x: d?.scrollLeft || 0, y: d?.scrollTop || 0 });
           setVisible(true);
           setMount(true);
         } else {
@@ -161,17 +170,12 @@ export const Popper: React.SFC<IPopperProps> = props => {
       if (!isEqual(rect, chRect)) {
         setchRect(rect);
       }
-      document.addEventListener("mousemove", handleTriggerEvent);
+      const eventStr = trigger === "hover" ? "mousemove" : "click";
+      document.addEventListener(eventStr, handleTriggerEvent);
       return () => {
-        document.removeEventListener("mousemove", handleTriggerEvent);
+        document.removeEventListener(eventStr, handleTriggerEvent);
       };
     }
-    // if (contentRef.current) {
-    //   const rect = contentRef.current.getBoundingClientRect();
-    //   if (!isEqual(rect, coRect)) {
-    //     setCoRect(rect);
-    //   }
-    // }
     return;
   }, [
     children,
@@ -182,6 +186,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     mount,
     timer.current,
     eventTimer.current,
+    trigger,
   ]);
 
   return (

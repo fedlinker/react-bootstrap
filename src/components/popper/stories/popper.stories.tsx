@@ -108,3 +108,31 @@ export const PlacementUsage = () => {
     </div>
   );
 };
+
+export const TriggerUsage = () => {
+  const content = (
+    <div
+      style={{
+        padding: "8px",
+        backgroundColor: "#f8f8f8",
+        border: "1px solid #eee",
+        boxShadow: "0 0 8px #f3f3f3",
+      }}
+    >
+      Popper content
+    </div>
+  );
+  return (
+    <div style={{ padding: "64px" }}>
+      <Popper content={content} placement="bottom" trigger="click">
+        <Button style={{ marginBottom: "16px" }}>click trigger</Button>
+      </Popper>
+      <Popper content={content} placement="bottom" trigger="hover">
+        <Button>hover trigger</Button>
+      </Popper>
+      {times(100, o => {
+        return <div key={o}>{o}</div>;
+      })}
+    </div>
+  );
+};
