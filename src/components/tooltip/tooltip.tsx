@@ -14,6 +14,7 @@ export const Tooltip = (props: ITooltipProps) => {
       position: "relative",
       padding: 2,
       borderRadius: "default",
+      fontSize: 1,
     });
   }, []);
 
