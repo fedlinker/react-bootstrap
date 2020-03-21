@@ -51,32 +51,38 @@ export const Popper: React.SFC<IPopperProps> = props => {
             left: chRect.left,
             transform: `translate3d(calc(${chRect.width / 2}px - 50%),-100%,0)`,
           };
+          break;
         case "topLeft":
           vals = {
             top: chRect.top,
             left: chRect.left,
             transform: `translate3d(0,-100%,0)`,
           };
+          break;
         case "topRight":
           vals = {
             top: chRect.top,
             left: chRect.left + chRect.width,
             transform: `translate3d(-100%,-100%,0)`,
           };
+          break;
         case "bottom":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left,
             transform: `translate3d(calc(${chRect.width / 2}px - 50%),0,0)`,
           };
+          break;
         case "bottomLeft":
           vals = { top: chRect.top + chRect.height, left: chRect.left };
+          break;
         case "bottomRight":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left + chRect.width,
             transform: `translate3d(-100%,0,0)`,
           };
+          break;
         case "left":
           vals = {
             top: chRect.top,
@@ -84,30 +90,35 @@ export const Popper: React.SFC<IPopperProps> = props => {
             transform: `translate3d(-100%,calc(${chRect.height /
               2}px - 50%),0)`,
           };
+          break;
         case "leftBottom":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left,
             transform: `translate3d(-100%,-100%,0)`,
           };
+          break;
         case "leftTop":
           vals = {
             top: chRect.top,
             left: chRect.left,
             transform: `translate3d(-100%,0,0)`,
           };
+          break;
         case "right":
           vals = {
             top: chRect.top,
             left: chRect.left + chRect.width,
             transform: `translate3d(0,calc(${chRect.height / 2}px - 50%),0)`,
           };
+          break;
         case "rightBottom":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left + chRect.width,
             transform: `translate3d(0,-100%,0)`,
           };
+          break;
         case "rightTop":
           vals = {
             top: chRect.top,
