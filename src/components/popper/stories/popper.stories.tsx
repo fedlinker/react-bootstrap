@@ -5,6 +5,7 @@ import times from "lodash/times";
 
 export default {
   title: "Popper",
+  component: Popper,
 };
 
 export const BasicUsage = () => {
@@ -24,7 +25,7 @@ export const BasicUsage = () => {
           </div>
         }
         key={o}
-        placement="top"
+        placement="right"
       >
         <Button>Popper Button</Button>
       </Popper>
@@ -133,6 +134,23 @@ export const TriggerUsage = () => {
       {times(100, o => {
         return <div key={o}>{o}</div>;
       })}
+    </div>
+  );
+};
+
+export const Delay = () => {
+  return (
+    <div>
+      <Popper content={<div>delay content</div>} placement="bottom" delay={500}>
+        <Button style={{ marginBottom: "16px" }}>delay number</Button>
+      </Popper>
+      <Popper
+        content={<div>delay content</div>}
+        placement="bottom"
+        delay={{ show: 500, hide: 100 }}
+      >
+        <Button style={{ marginBottom: "16px" }}>delay object</Button>
+      </Popper>
     </div>
   );
 };

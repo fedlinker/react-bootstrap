@@ -8,16 +8,21 @@ import { IPlacementType } from "../enum/placement";
 import { jsx, Interpolation } from "../theme";
 
 export type IPopperTriggerType = "hover" | "click";
+export interface IDelayObject {
+  show: number;
+  hide: number;
+}
 
 export interface IPopperProps {
   placement?: IPlacementType;
   content: React.ReactNode;
   trigger?: IPopperTriggerType;
   children: React.ReactNode;
+  delay?: number | IDelayObject;
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
-  const { placement, content, trigger, children } = props;
+  const { placement, content, trigger, delay, children } = props;
 
   const [visible, setVisible] = React.useState(false);
   const [mount, setMount] = React.useState(false);
@@ -32,12 +37,13 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   /** animation timer */
   const timer = React.useRef<NodeJS.Timeout | null>(null);
-  const eventTimer = React.useRef<NodeJS.Timeout | null>(null);
 
   /** leave and enter animations */
   const contentAnimation = useSpring({
     opacity: visible ? 1 : 0,
     config: { easing: easeCubicInOut, duration: 200 },
+    delay:
+      typeof delay === "number" ? delay : visible ? delay?.show : delay?.hide,
   });
 
   const childrenRef = React.useRef<HTMLElement>();
@@ -135,48 +141,42 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   React.useEffect(() => {
     const handleTriggerEvent = (e: Event) => {
-      if (eventTimer.current) {
-        clearTimeout(eventTimer.current);
-        eventTimer.current = null;
+      if (!(e.target instanceof HTMLElement)) {
+        return;
       }
-      eventTimer.current = setTimeout(() => {
-        if (!(e.target instanceof HTMLElement)) {
+      // true: the event target is contained in content or children.
+      const isContained =
+        (childrenRef.current && childrenRef.current.contains(e.target)) ||
+        (contentRef.current && contentRef.current.contains(e.target));
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+
+      // get document scroll top
+      const d = childrenRef.current?.ownerDocument?.documentElement;
+      const newSRect = { x: d?.scrollLeft || 0, y: d?.scrollTop || 0 };
+      if (!isEqual(newSRect, sRect)) {
+        setSRect(newSRect);
+      }
+
+      if (isContained) {
+        e.preventDefault();
+        if (visible && mount) {
           return;
         }
-        if (timer.current) {
-          clearTimeout(timer.current);
+        setVisible(true);
+        setMount(true);
+      } else {
+        if (!mount && !visible) {
+          return;
+        }
+        setVisible(false);
+        timer.current = setTimeout(() => {
+          setMount(false);
           timer.current = null;
-        }
-        // true: the event target is contained in content or children.
-        const isContained =
-          (childrenRef.current && childrenRef.current.contains(e.target)) ||
-          (contentRef.current && contentRef.current.contains(e.target));
-
-        // get document scroll top
-        const d = childrenRef.current?.ownerDocument?.documentElement;
-        const newSRect = { x: d?.scrollLeft || 0, y: d?.scrollTop || 0 };
-        if (!isEqual(newSRect, sRect)) {
-          setSRect(newSRect);
-        }
-
-        if (isContained) {
-          e.preventDefault();
-          if (visible && mount) {
-            return;
-          }
-          setVisible(true);
-          setMount(true);
-        } else {
-          if (!mount && !visible) {
-            return;
-          }
-          setVisible(false);
-          timer.current = setTimeout(() => {
-            setMount(false);
-            timer.current = null;
-          }, 200);
-        }
-      }, 0);
+        }, 200);
+      }
     };
     if (childrenRef.current) {
       const rect = childrenRef.current.getBoundingClientRect();
@@ -198,7 +198,6 @@ export const Popper: React.SFC<IPopperProps> = props => {
     visible,
     mount,
     timer.current,
-    eventTimer.current,
     trigger,
   ]);
 
@@ -231,4 +230,5 @@ export const Popper: React.SFC<IPopperProps> = props => {
 Popper.defaultProps = {
   placement: "bottom",
   trigger: "hover",
+  delay: 0,
 };
