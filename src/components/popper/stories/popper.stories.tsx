@@ -9,24 +9,21 @@ export default {
 };
 
 export const BasicUsage = () => {
+  const content = (
+    <div
+      style={{
+        padding: "8px",
+        backgroundColor: "#f8f8f8",
+        border: "1px solid #eee",
+        boxShadow: "0 0 8px #f3f3f3",
+      }}
+    >
+      Popper content
+    </div>
+  );
   return times(100, o => {
     return (
-      <Popper
-        content={
-          <div
-            style={{
-              padding: "8px",
-              backgroundColor: "#f8f8f8",
-              border: "1px solid #eee",
-              boxShadow: "0 0 8px #f3f3f3",
-            }}
-          >
-            Popper content
-          </div>
-        }
-        key={o}
-        placement="right"
-      >
+      <Popper content={content} key={o} placement="right">
         <Button>Popper Button</Button>
       </Popper>
     );
