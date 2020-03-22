@@ -140,6 +140,26 @@ export const Popper: React.SFC<IPopperProps> = props => {
   }, [chRect, sRect, placement]);
 
   React.useEffect(() => {
+    // show the popper content
+    const setShow = () => {
+      if (visible && mount) {
+        return;
+      }
+      setVisible(true);
+      setMount(true);
+    };
+    // hide the popper content
+    const setHide = () => {
+      if (!mount && !visible) {
+        return;
+      }
+      setVisible(false);
+      timer.current = setTimeout(() => {
+        setMount(false);
+        timer.current = null;
+      }, 200);
+    };
+
     const handleTriggerEvent = (e: Event) => {
       if (!(e.target instanceof HTMLElement)) {
         return;
@@ -160,22 +180,19 @@ export const Popper: React.SFC<IPopperProps> = props => {
         setSRect(newSRect);
       }
 
+      // when focus, stop other event
+      if (e.type === "focus") {
+        setShow();
+        return;
+      } else if (e.type === "blur") {
+        setHide();
+        return;
+      }
+
       if (isContained) {
-        e.preventDefault();
-        if (visible && mount) {
-          return;
-        }
-        setVisible(true);
-        setMount(true);
+        setShow();
       } else {
-        if (!mount && !visible) {
-          return;
-        }
-        setVisible(false);
-        timer.current = setTimeout(() => {
-          setMount(false);
-          timer.current = null;
-        }, 200);
+        setHide();
       }
     };
     if (childrenRef.current) {
@@ -185,8 +202,19 @@ export const Popper: React.SFC<IPopperProps> = props => {
       }
       const eventStr = trigger === "hover" ? "mousemove" : "click";
       document.addEventListener(eventStr, handleTriggerEvent);
+
+      // when blured, hide the popper content
+      childrenRef.current.addEventListener("blur", handleTriggerEvent);
+      if (trigger === "hover") {
+        childrenRef.current.addEventListener("focus", handleTriggerEvent);
+      }
       return () => {
+        // remove listeners
         document.removeEventListener(eventStr, handleTriggerEvent);
+        childrenRef.current?.removeEventListener("blur", handleTriggerEvent);
+        if (trigger === "hover") {
+          childrenRef.current?.removeEventListener("focus", handleTriggerEvent);
+        }
       };
     }
     return;
