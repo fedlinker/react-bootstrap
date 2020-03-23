@@ -151,7 +151,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     if (!mount) {
       return {};
     }
-    let vals: Interpolation = {};
+    let vals: Interpolation = { top: 0, left: 0 };
     if (chRect && coRect) {
       const w = (chRect.width - coRect.width) / 2;
       const transHeight = coRect.height + offset!;
@@ -159,90 +159,62 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
       switch (fixedPlacement) {
         case "top":
-          vals = {
-            top: chRect.top,
-            left: chRect.left,
-            transform: `translate3d(${w}px,-${transHeight}px,0)`,
-          };
+          vals.transform = `translate3d(${w + chRect.left}px,${chRect.top -
+            transHeight}px,0)`;
           break;
         case "topLeft":
-          vals = {
-            top: chRect.top,
-            left: chRect.left,
-            transform: `translate3d(0,-${transHeight}px,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left}px,${chRect.top -
+            transHeight}px,0)`;
           break;
         case "topRight":
-          vals = {
-            top: chRect.top,
-            left: chRect.left + chRect.width,
-            transform: `translate3d(-100%,-${transHeight}px,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left +
+            chRect.width -
+            coRect.width}px,${chRect.top - transHeight}px,0)`;
           break;
         case "bottom":
-          vals = {
-            top: chRect.top + chRect.height,
-            left: 0,
-            transform: `translate3d(${w + chRect.left}px,${offset!}px,0)`,
-          };
+          vals.transform = `translate3d(${w + chRect.left}px,${chRect.top +
+            chRect.height +
+            offset!}px,0)`;
           break;
         case "bottomLeft":
-          vals = {
-            top: chRect.top + chRect.height,
-            left: 0,
-            transform: `translate3d(${chRect.left}px,${offset!}px,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left}px,${chRect.top +
+            chRect.height +
+            offset!}px,0)`;
           break;
         case "bottomRight":
-          vals = {
-            top: chRect.top + chRect.height,
-            left: chRect.left + chRect.width,
-            transform: `translate3d(-100%,${offset!}px,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left +
+            chRect.width -
+            coRect.width}px,${chRect.top + chRect.height + offset!}px,0)`;
           break;
         case "left":
-          vals = {
-            top: chRect.top,
-            left: chRect.left,
-            transform: `translate3d(-${transWidth}px,calc(${chRect.height /
-              2}px - 50%),0)`,
-          };
+          vals.transform = `translate3d(${chRect.left -
+            transWidth}px,${chRect.top +
+            (chRect.height - coRect.height) / 2}px,0)`;
           break;
         case "leftBottom":
-          vals = {
-            top: chRect.top + chRect.height,
-            left: chRect.left,
-            transform: `translate3d(-${transWidth}px,-100%,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left -
+            transWidth}px,${chRect.top + chRect.height - coRect.height}px,0)`;
           break;
         case "leftTop":
-          vals = {
-            top: chRect.top,
-            left: chRect.left,
-            transform: `translate3d(-${transWidth}px,0,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left - transWidth}px,${
+            chRect.top
+          }px,0)`;
           break;
         case "right":
-          vals = {
-            top: chRect.top,
-            left: chRect.left + chRect.width,
-            transform: `translate3d(${offset!}px,calc(${chRect.height /
-              2}px - 50%),0)`,
-          };
+          vals.transform = `translate3d(${chRect.left +
+            chRect.width +
+            offset!}px,${chRect.top +
+            (chRect.height - coRect.height) / 2}px,0)`;
           break;
         case "rightBottom":
-          vals = {
-            top: chRect.top + chRect.height,
-            left: chRect.left + chRect.width,
-            transform: `translate3d(${offset!}px,-100%,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left +
+            chRect.width +
+            offset!}px,${chRect.top + chRect.height - coRect.height}px,0)`;
           break;
         case "rightTop":
-          vals = {
-            top: chRect.top,
-            left: chRect.left + chRect.width,
-            transform: `translate3d(${offset!}px,0,0)`,
-          };
+          vals.transform = `translate3d(${chRect.left +
+            chRect.width +
+            offset!}px,${chRect.top}px,0)`;
       }
       (vals.top as number) += sRect.y;
       (vals.left as number) += sRect.x;
@@ -336,8 +308,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
             css={[
               {
                 position: "absolute",
-                maxWidth: "568px",
-                minWidth: "168px",
+                boxSizing: "border-box",
               },
               contentPositionStyle,
               contentContainerStyle,

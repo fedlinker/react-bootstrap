@@ -21,10 +21,10 @@ export const BasicUsage = () => {
       Popper content
     </div>
   );
-  return times(100, o => {
+  return times(10, o => {
     return (
       <Popper content={content} key={o} placement="right">
-        <Button>Popper Button</Button>
+        <Button style={{ marginBottom: "16px" }}>Popper Button</Button>
       </Popper>
     );
   });
@@ -34,7 +34,7 @@ export const PlacementUsage = () => {
   const content = (
     <div
       style={{
-        padding: "8px",
+        padding: "16px 24px",
         backgroundColor: "#f8f8f8",
         border: "1px solid #eee",
         boxShadow: "0 0 8px #f3f3f3",
@@ -44,15 +44,7 @@ export const PlacementUsage = () => {
     </div>
   );
   return (
-    <div style={{ padding: "64px", overflow: "scroll" }}>
-      <div style={{ width: "3000px" }}>
-        {times(30, o => (
-          <span key={o}>{o}</span>
-        ))}
-      </div>
-      {times(30, o => (
-        <div key={o}>{o}</div>
-      ))}
+    <div style={{ padding: "64px" }}>
       <div
         style={{
           display: "flex",
@@ -111,9 +103,6 @@ export const PlacementUsage = () => {
           <Button>bottom right</Button>
         </Popper>
       </div>
-      {times(50, o => (
-        <div key={o}>{o}</div>
-      ))}
     </div>
   );
 };

@@ -31,6 +31,7 @@ export const Popover = (props: IPopoverProps) => {
             css={[
               getCss({
                 maxWidth: "276px",
+                minWidth: "128px",
                 borderRadius: "default",
                 border: "1px solid",
                 borderColor: "inputBorder",
@@ -88,78 +89,66 @@ function Triangle(props: {
     const isBottom = placement.indexOf("bottom") === 0;
     const isLeft = placement.indexOf("left") === 0;
     const isRight = placement.indexOf("right") === 0;
-    const transform = `rotate(${
-      isTop ? 0 : isBottom ? 180 : isLeft ? -90 : isRight ? 90 : 0
-    }deg)`;
+    const xOffset =
+      placement.indexOf("Right") >= 0
+        ? contentRect.width - rect.width / 2
+        : placement.indexOf("Left") >= 0
+        ? rect.width / 2
+        : contentRect.width / 2;
+    const yOffset =
+      placement.indexOf("Bottom") > 0
+        ? contentRect.height - rect.height / 2
+        : placement.indexOf("Top") >= 0
+        ? rect.height / 2
+        : contentRect.height / 2;
+
     return {
       style: getCss({
         position: "absolute",
-        width: 0,
-        height: 0,
-        borderStyle: "solid",
-        borderColor: "transparent",
-        borderWidth: "9px 8px 0 8px",
-        borderTopColor: "background",
-        transform,
-        ...(isTop
-          ? {
-              left:
-                placement === "topRight"
-                  ? `${contentRect.width - rect.width / 2 - 4}px`
-                  : placement === "top"
-                  ? `${contentRect.width / 2 - 4}px`
-                  : `${rect.width / 2 - 4}px`,
-              bottom: `-8px`,
-            }
+        top: 0,
+        left: 0,
+        transformOrigin: "top left",
+        "&:after": {
+          display: "block",
+          content: "''",
+          position: "absolute",
+          width: 0,
+          height: 0,
+          borderStyle: "solid",
+          borderColor: "transparent",
+          borderWidth: "8px 7px 0 7px",
+          borderTopColor: "background",
+          top: 0,
+          left: "1px",
+          zIndex: 1,
+        },
+        "&:before": {
+          display: "block",
+          content: "''",
+          position: "absolute",
+          width: 0,
+          height: 0,
+          borderStyle: "solid",
+          borderColor: "transparent",
+          borderWidth: "9px 8px 0 8px",
+          borderTopColor: "inputBorder",
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        },
+        transform: isTop
+          ? `translate3d(${xOffset - 8}px,${contentRect.height - 2}px,0)`
           : isBottom
-          ? {
-              left:
-                placement === "bottomRight"
-                  ? `${contentRect.width - rect.width / 2 - 4}px`
-                  : placement === "bottom"
-                  ? `${contentRect.width / 2 - 4}px`
-                  : `${rect.width / 2 - 4}px`,
-              top: "-8px",
-            }
+          ? `translate3d(${xOffset + 8}px,0,0) rotate(180deg)`
           : isLeft
-          ? {
-              right: "-12px",
-              top:
-                placement === "leftTop"
-                  ? `${rect.height / 2 - 4}px`
-                  : placement === "left"
-                  ? `${contentRect.height / 2 - 4}px`
-                  : `${contentRect.height - rect.height / 2 - 4}px`,
-            }
+          ? `translate3d(${contentRect.width - 2}px,${yOffset +
+              8}px,0) rotate(-90deg)`
           : isRight
-          ? {
-              left: "-12px",
-              top:
-                placement === "rightTop"
-                  ? `${rect.height / 2 - 4}px`
-                  : placement === "right"
-                  ? `${contentRect.height / 2 - 4}px`
-                  : `${contentRect.height - rect.height / 2 - 4}px`,
-            }
-          : {}),
+          ? `translate3d(${0}px,${yOffset - 8}px,0) rotate(90deg)`
+          : "",
       }),
-      rotate: transform,
     };
   }, [placement, rect, contentRect]);
 
-  return (
-    <React.Fragment>
-      <div css={styles.style} />
-      <div
-        css={[
-          styles.style,
-          getCss({
-            borderTopColor: "inputBorder",
-            transform: `${styles.rotate} translate3d(0,1px,0)`,
-            zIndex: -1,
-          }),
-        ]}
-      />
-    </React.Fragment>
-  );
+  return <div css={styles.style} />;
 }
