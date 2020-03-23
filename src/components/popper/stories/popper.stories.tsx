@@ -44,7 +44,15 @@ export const PlacementUsage = () => {
     </div>
   );
   return (
-    <div style={{ padding: "64px" }}>
+    <div style={{ padding: "64px", overflow: "scroll" }}>
+      <div style={{ width: "3000px" }}>
+        {times(30, o => (
+          <span key={o}>{o}</span>
+        ))}
+      </div>
+      {times(30, o => (
+        <div key={o}>{o}</div>
+      ))}
       <div
         style={{
           display: "flex",
@@ -52,36 +60,36 @@ export const PlacementUsage = () => {
           paddingBottom: "16px",
         }}
       >
-        <Popper content={content} placement="topLeft">
+        <Popper content={content} placement="topLeft" offset={8}>
           <Button style={{ marginRight: "16px" }}>top left</Button>
         </Popper>
-        <Popper content={content} placement="top">
+        <Popper content={content} placement="top" offset={8}>
           <Button style={{ marginRight: "16px" }}>top center</Button>
         </Popper>
-        <Popper content={content} placement="topRight">
+        <Popper content={content} placement="topRight" offset={8}>
           <Button>top right</Button>
         </Popper>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <div style={{}}>
-          <Popper content={content} placement="leftTop">
+          <Popper content={content} placement="leftTop" offset={8}>
             <Button style={{ marginBottom: "16px" }}>left top</Button>
           </Popper>
-          <Popper content={content} placement="left">
+          <Popper content={content} placement="left" offset={8}>
             <Button style={{ marginBottom: "16px" }}>left center</Button>
           </Popper>
-          <Popper content={content} placement="leftBottom">
+          <Popper content={content} placement="leftBottom" offset={8}>
             <Button>left bottom</Button>
           </Popper>
         </div>
         <div style={{}}>
-          <Popper content={content} placement="rightTop">
+          <Popper content={content} placement="rightTop" offset={8}>
             <Button style={{ marginBottom: "16px" }}>right top</Button>
           </Popper>
-          <Popper content={content} placement="right">
+          <Popper content={content} placement="right" offset={8}>
             <Button style={{ marginBottom: "16px" }}>right center</Button>
           </Popper>
-          <Popper content={content} placement="rightBottom">
+          <Popper content={content} placement="rightBottom" offset={8}>
             <Button>right bottom</Button>
           </Popper>
         </div>
@@ -93,16 +101,19 @@ export const PlacementUsage = () => {
           paddingTop: "16px",
         }}
       >
-        <Popper content={content} placement="bottomLeft">
+        <Popper content={content} placement="bottomLeft" offset={8}>
           <Button style={{ marginRight: "16px" }}>bottom left</Button>
         </Popper>
-        <Popper content={content} placement="bottom">
+        <Popper content={content} placement="bottom" offset={8}>
           <Button style={{ marginRight: "16px" }}>bottom center</Button>
         </Popper>
-        <Popper content={content} placement="bottomRight">
+        <Popper content={content} placement="bottomRight" offset={8}>
           <Button>bottom right</Button>
         </Popper>
       </div>
+      {times(50, o => (
+        <div key={o}>{o}</div>
+      ))}
     </div>
   );
 };

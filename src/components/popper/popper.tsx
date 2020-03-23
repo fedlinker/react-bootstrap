@@ -12,13 +12,18 @@ export interface IDelayObject {
   show: number;
   hide: number;
 }
+export type IContentRenderPropsType = (props: {
+  rect: DOMRect;
+  contentRect?: DOMRect;
+  fixedPlacement: IPlacementType;
+}) => React.ReactNode;
 
 export interface IPopperProps {
   placement?: IPlacementType;
   /**
    * trigger content
    */
-  content: React.ReactNode;
+  content: React.ReactNode | IContentRenderPropsType;
   /**
    * trigger ways.
    */
@@ -32,9 +37,15 @@ export interface IPopperProps {
    */
   delay?: number | IDelayObject;
   /**
-   * auto change the placement based on position
+   * auto change the placement based on position.
    */
   autoFixPlacement?: boolean;
+
+  /**
+   * the distance between content and children.
+   * number unit is pixel
+   */
+  offset?: number;
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
@@ -45,6 +56,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     delay,
     children,
     autoFixPlacement,
+    offset,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
@@ -80,78 +92,92 @@ export const Popper: React.SFC<IPopperProps> = props => {
       typeof delay === "number" ? delay : visible ? delay?.show : delay?.hide,
   });
 
-  const childrenPosition = React.useMemo<Interpolation>(() => {
-    if (!mount) {
-      return {};
-    }
-    let vals: Interpolation = { top: 0, left: 0 };
+  // fix the placement based on rect
+  const fixedPlacement = React.useMemo(() => {
     let p = placement!;
-    if (chRect) {
+    if (chRect && coRect) {
       // fix the placement based on rect
-      if (coRect && autoFixPlacement) {
+      if (autoFixPlacement) {
         if (p.indexOf("top") === 0) {
-          if (chRect.top < coRect.height) {
+          if (chRect.top < coRect.height + offset!) {
             p = p.replace("top", "bottom") as IPlacementType;
           }
         } else if (p.indexOf("bottom") === 0) {
-          if (chRect.top + chRect.height + coRect.height > sRect.h) {
+          if (chRect.top + chRect.height + coRect.height + offset! > sRect.h) {
             p = p.replace("bottom", "top") as IPlacementType;
           }
         } else if (p.indexOf("left") === 0) {
-          if (chRect.left < coRect.width) {
+          if (chRect.left < coRect.width + offset!) {
             p = p.replace("left", "right") as IPlacementType;
           }
         } else if (p.indexOf("right") === 0) {
-          if (chRect.left + chRect.width + coRect.width > sRect.w) {
+          if (chRect.left + chRect.width + coRect.width + offset! > sRect.w) {
             p = p.replace("right", "left") as IPlacementType;
           }
         }
       }
+    }
+    return p;
+  }, [placement, chRect, coRect, offset, sRect]);
 
-      switch (p) {
+  const childrenPosition = React.useMemo<Interpolation>(() => {
+    if (!mount) {
+      return {};
+    }
+    let vals: Interpolation = {};
+    if (chRect && coRect) {
+      const w = (chRect.width - coRect.width) / 2;
+      const transHeight = coRect.height + offset!;
+      const transWidth = coRect.width + offset!;
+
+      switch (fixedPlacement) {
         case "top":
           vals = {
             top: chRect.top,
             left: chRect.left,
-            transform: `translate3d(calc(${chRect.width / 2}px - 50%),-100%,0)`,
+            transform: `translate3d(${w}px,-${transHeight}px,0)`,
           };
           break;
         case "topLeft":
           vals = {
             top: chRect.top,
             left: chRect.left,
-            transform: `translate3d(0,-100%,0)`,
+            transform: `translate3d(0,-${transHeight}px,0)`,
           };
           break;
         case "topRight":
           vals = {
             top: chRect.top,
             left: chRect.left + chRect.width,
-            transform: `translate3d(-100%,-100%,0)`,
+            transform: `translate3d(-100%,-${transHeight}px,0)`,
           };
           break;
         case "bottom":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left,
-            transform: `translate3d(calc(${chRect.width / 2}px - 50%),0,0)`,
+            transform: `translate3d(${w}px,${offset!}px,0)`,
           };
           break;
         case "bottomLeft":
-          vals = { top: chRect.top + chRect.height, left: chRect.left };
+          vals = {
+            top: chRect.top + chRect.height,
+            left: chRect.left,
+            transform: `translate3d(0,${offset!}px,0)`,
+          };
           break;
         case "bottomRight":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left + chRect.width,
-            transform: `translate3d(-100%,0,0)`,
+            transform: `translate3d(-100%,${offset!}px,0)`,
           };
           break;
         case "left":
           vals = {
             top: chRect.top,
             left: chRect.left,
-            transform: `translate3d(-100%,calc(${chRect.height /
+            transform: `translate3d(-${transWidth}px,calc(${chRect.height /
               2}px - 50%),0)`,
           };
           break;
@@ -159,41 +185,43 @@ export const Popper: React.SFC<IPopperProps> = props => {
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left,
-            transform: `translate3d(-100%,-100%,0)`,
+            transform: `translate3d(-${transWidth}px,-100%,0)`,
           };
           break;
         case "leftTop":
           vals = {
             top: chRect.top,
             left: chRect.left,
-            transform: `translate3d(-100%,0,0)`,
+            transform: `translate3d(-${transWidth}px,0,0)`,
           };
           break;
         case "right":
           vals = {
             top: chRect.top,
             left: chRect.left + chRect.width,
-            transform: `translate3d(0,calc(${chRect.height / 2}px - 50%),0)`,
+            transform: `translate3d(${offset!}px,calc(${chRect.height /
+              2}px - 50%),0)`,
           };
           break;
         case "rightBottom":
           vals = {
             top: chRect.top + chRect.height,
             left: chRect.left + chRect.width,
-            transform: `translate3d(0,-100%,0)`,
+            transform: `translate3d(${offset!}px,-100%,0)`,
           };
           break;
         case "rightTop":
           vals = {
             top: chRect.top,
             left: chRect.left + chRect.width,
+            transform: `translate3d(${offset!}px,0,0)`,
           };
       }
       (vals.top as number) += sRect.y;
       (vals.left as number) += sRect.x;
     }
     return vals;
-  }, [chRect, sRect, coRect, placement, mount]);
+  }, [chRect, sRect, coRect, fixedPlacement, mount]);
 
   React.useEffect(() => {
     // show the popper content
@@ -253,16 +281,16 @@ export const Popper: React.SFC<IPopperProps> = props => {
       d.addEventListener(eventStr, handleTriggerEvent);
 
       // when blured, hide the popper content
-      childrenRef.current.addEventListener("blur", handleTriggerEvent);
       if (trigger === "hover") {
         childrenRef.current.addEventListener("focus", handleTriggerEvent);
+        childrenRef.current.addEventListener("blur", handleTriggerEvent);
       }
       return () => {
         // remove listeners
         d.removeEventListener(eventStr, handleTriggerEvent);
-        childrenRef.current?.removeEventListener("blur", handleTriggerEvent);
         if (trigger === "hover") {
           childrenRef.current?.removeEventListener("focus", handleTriggerEvent);
+          childrenRef.current?.removeEventListener("blur", handleTriggerEvent);
         }
       };
     }
@@ -293,7 +321,18 @@ export const Popper: React.SFC<IPopperProps> = props => {
               childrenPosition,
             ]}
           >
-            {React.isValidElement(content)
+            {typeof content === "function"
+              ? React.cloneElement(
+                  content({
+                    rect: chRect,
+                    contentRect: coRect,
+                    fixedPlacement,
+                  }),
+                  {
+                    ref: contentRef,
+                  }
+                )
+              : React.isValidElement(content)
               ? React.cloneElement(content, { ref: contentRef })
               : null}
           </animated.div>
@@ -308,4 +347,5 @@ Popper.defaultProps = {
   trigger: "hover",
   delay: 0,
   autoFixPlacement: true,
+  offset: 0,
 };
