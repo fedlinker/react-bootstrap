@@ -10,7 +10,9 @@ export interface IStylesObject {
   [key: string]: SystemStyleObject;
 }
 
-export const getStyles = (styles: IStylesObject) => {
+export const getStyles = <T extends IStylesObject = IStylesObject>(
+  styles: T
+): { [key in keyof T]: Interpolation } => {
   return mapValues(styles, o => {
     return getCss(o);
   });
