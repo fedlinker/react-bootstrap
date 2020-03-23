@@ -2,6 +2,7 @@ import React from "react";
 import { Popper } from "../popper";
 import { Button } from "../../button";
 import times from "lodash/times";
+import { boolean } from "@storybook/addon-knobs";
 
 export default {
   title: "Popper",
@@ -149,5 +150,20 @@ export const Delay = () => {
         <Button style={{ marginBottom: "16px" }}>delay object</Button>
       </Popper>
     </div>
+  );
+};
+
+export const Disabled = () => {
+  const isDisabled = boolean("disabled", false);
+  return (
+    <Popper
+      content={<div>delay content</div>}
+      placement="bottom"
+      disabled={isDisabled}
+    >
+      <Button style={{ marginBottom: "16px" }}>{`popper${
+        isDisabled ? " disabled" : ""
+      }`}</Button>
+    </Popper>
   );
 };

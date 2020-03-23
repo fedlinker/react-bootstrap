@@ -47,6 +47,11 @@ export interface IPopperProps {
    */
   offset?: number;
 
+  /**
+   * disable the popper content
+   */
+  disabled?: boolean;
+
   contentContainerStyle?: Interpolation;
 }
 
@@ -60,6 +65,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     autoFixPlacement,
     offset,
     contentContainerStyle,
+    disabled,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
@@ -223,6 +229,9 @@ export const Popper: React.SFC<IPopperProps> = props => {
   }, [chRect, sRect, coRect, fixedPlacement, mount]);
 
   React.useEffect(() => {
+    if (disabled) {
+      return;
+    }
     // show the popper content
     const setShow = () => {
       if (visible && mount) {
