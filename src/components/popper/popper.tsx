@@ -46,6 +46,8 @@ export interface IPopperProps {
    * number unit is pixel
    */
   offset?: number;
+
+  contentContainerStyle?: Interpolation;
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
@@ -57,6 +59,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     children,
     autoFixPlacement,
     offset,
+    contentContainerStyle,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
@@ -75,11 +78,11 @@ export const Popper: React.SFC<IPopperProps> = props => {
       w: d.clientWidth,
       h: d.clientHeight,
     };
-  }, [visible, mount]);
+  }, [mount]);
   // children rect
-  const chRect = useRefRect(childrenRef, [visible, mount]);
+  const chRect = useRefRect(childrenRef, [mount]);
   // content rect
-  const coRect = useRefRect(contentRef, [visible, mount]);
+  const coRect = useRefRect(contentRef, [mount]);
 
   /** animation timer */
   const timer = React.useRef<NodeJS.Timeout | null>(null);
@@ -99,18 +102,42 @@ export const Popper: React.SFC<IPopperProps> = props => {
       // fix the placement based on rect
       if (autoFixPlacement) {
         if (p.indexOf("top") === 0) {
+          if (coRect.left < 0) {
+            p = "topLeft";
+          }
+          if (coRect.left + coRect.width > sRect.w) {
+            p = "topRight";
+          }
           if (chRect.top < coRect.height + offset!) {
             p = p.replace("top", "bottom") as IPlacementType;
           }
         } else if (p.indexOf("bottom") === 0) {
+          if (coRect.left < 0) {
+            p = "bottomLeft";
+          }
+          if (coRect.left + coRect.width > sRect.w) {
+            p = "bottomRight";
+          }
           if (chRect.top + chRect.height + coRect.height + offset! > sRect.h) {
             p = p.replace("bottom", "top") as IPlacementType;
           }
         } else if (p.indexOf("left") === 0) {
+          if (coRect.top < 0) {
+            p = "leftTop";
+          }
+          if (coRect.top + coRect.height > sRect.h) {
+            p = "leftBottom";
+          }
           if (chRect.left < coRect.width + offset!) {
             p = p.replace("left", "right") as IPlacementType;
           }
         } else if (p.indexOf("right") === 0) {
+          if (coRect.top < 0) {
+            p = "rightTop";
+          }
+          if (coRect.top + coRect.height > sRect.h) {
+            p = "rightBottom";
+          }
           if (chRect.left + chRect.width + coRect.width + offset! > sRect.w) {
             p = p.replace("right", "left") as IPlacementType;
           }
@@ -120,7 +147,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     return p;
   }, [placement, chRect, coRect, offset, sRect]);
 
-  const childrenPosition = React.useMemo<Interpolation>(() => {
+  const contentPositionStyle = React.useMemo<Interpolation>(() => {
     if (!mount) {
       return {};
     }
@@ -155,15 +182,15 @@ export const Popper: React.SFC<IPopperProps> = props => {
         case "bottom":
           vals = {
             top: chRect.top + chRect.height,
-            left: chRect.left,
-            transform: `translate3d(${w}px,${offset!}px,0)`,
+            left: 0,
+            transform: `translate3d(${w + chRect.left}px,${offset!}px,0)`,
           };
           break;
         case "bottomLeft":
           vals = {
             top: chRect.top + chRect.height,
-            left: chRect.left,
-            transform: `translate3d(0,${offset!}px,0)`,
+            left: 0,
+            transform: `translate3d(${chRect.left}px,${offset!}px,0)`,
           };
           break;
         case "bottomRight":
@@ -295,15 +322,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
       };
     }
     return;
-  }, [
-    children,
-    childrenRef.current,
-    placement,
-    visible,
-    mount,
-    timer.current,
-    trigger,
-  ]);
+  }, [children, childrenRef.current, visible, mount, timer.current, trigger]);
 
   return (
     <React.Fragment>
@@ -317,8 +336,11 @@ export const Popper: React.SFC<IPopperProps> = props => {
             css={[
               {
                 position: "absolute",
+                maxWidth: "568px",
+                minWidth: "168px",
               },
-              childrenPosition,
+              contentPositionStyle,
+              contentContainerStyle,
             ]}
           >
             {typeof content === "function"
