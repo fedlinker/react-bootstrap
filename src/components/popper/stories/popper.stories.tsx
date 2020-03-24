@@ -157,7 +157,7 @@ export const Disabled = () => {
   const isDisabled = boolean("disabled", false);
   return (
     <Popper
-      content={<div>delay content</div>}
+      content={<div>content</div>}
       placement="bottom"
       disabled={isDisabled}
     >
@@ -165,5 +165,35 @@ export const Disabled = () => {
         isDisabled ? " disabled" : ""
       }`}</Button>
     </Popper>
+  );
+};
+
+export const CustomizeAnimation = () => {
+  return (
+    <div style={{ padding: "120px" }}>
+      <Popper
+        content={<div>content</div>}
+        placement="bottom"
+        animationFunc={({ visible }) => {
+          return { transform: `translate3d(${visible ? 0 : -20}px,0,0)` };
+        }}
+      >
+        <Button style={{ marginBottom: "48px" }}>Customize animation</Button>
+      </Popper>
+      <Popper
+        content={<div>content</div>}
+        placement="top"
+        animationFunc={({ visible, placement }) => {
+          const isTop = placement.indexOf("top") === 0;
+          return {
+            transform: `translate3d(${visible ? 0 : isTop ? 0 : -20}px,${
+              visible ? 0 : isTop ? -20 : 0
+            }px,0)`,
+          };
+        }}
+      >
+        <Button style={{ marginBottom: "16px" }}>Customize animation</Button>
+      </Popper>
+    </div>
   );
 };

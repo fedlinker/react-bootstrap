@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import React from "react";
-import { animated, useSpring } from "react-spring";
+import React, { CSSProperties } from "react";
+import { animated, useSpring, UseSpringProps } from "react-spring";
 import { easeCubicInOut } from "d3-ease";
 import { Portal } from "../portal";
 import { IPlacementType } from "../enum/placement";
@@ -53,6 +53,16 @@ export interface IPopperProps {
   disabled?: boolean;
 
   contentContainerStyle?: Interpolation;
+
+  /**
+   * customize animation of showing and hiding.
+   * @param value animation state
+   */
+  animationFunc?(value: {
+    visible: boolean;
+    delay: number | IDelayObject;
+    placement: IPlacementType;
+  }): UseSpringProps<CSSProperties>;
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
@@ -66,6 +76,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     offset,
     contentContainerStyle,
     disabled,
+    animationFunc,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
@@ -92,14 +103,6 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   /** animation timer */
   const timer = React.useRef<NodeJS.Timeout | null>(null);
-
-  /** leave and enter animations */
-  const contentAnimation = useSpring({
-    opacity: visible ? 1 : 0,
-    config: { easing: easeCubicInOut, duration: 200 },
-    delay:
-      typeof delay === "number" ? delay : visible ? delay?.show : delay?.hide,
-  });
 
   // fix the placement based on rect
   const fixedPlacement = React.useMemo(() => {
@@ -152,6 +155,17 @@ export const Popper: React.SFC<IPopperProps> = props => {
     }
     return p;
   }, [placement, chRect, coRect, offset, sRect]);
+
+  /** leave and enter animations */
+  const contentAnimation = useSpring({
+    opacity: visible ? 1 : 0,
+    config: { easing: easeCubicInOut, duration: 200 },
+    delay:
+      typeof delay === "number" ? delay : visible ? delay?.show : delay?.hide,
+    ...(typeof animationFunc === "function"
+      ? animationFunc({ visible, delay: delay!, placement: fixedPlacement })
+      : {}),
+  });
 
   const contentPositionStyle = React.useMemo<Interpolation>(() => {
     if (!mount) {
@@ -312,8 +326,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
         : null}
       <Portal>
         {mount && chRect ? (
-          <animated.div
-            style={contentAnimation}
+          <div
             css={[
               {
                 position: "absolute",
@@ -323,21 +336,23 @@ export const Popper: React.SFC<IPopperProps> = props => {
               contentContainerStyle,
             ]}
           >
-            {typeof content === "function"
-              ? React.cloneElement(
-                  content({
-                    rect: chRect,
-                    contentRect: coRect,
-                    fixedPlacement,
-                  }),
-                  {
-                    ref: contentRef,
-                  }
-                )
-              : React.isValidElement(content)
-              ? React.cloneElement(content, { ref: contentRef })
-              : null}
-          </animated.div>
+            <animated.div style={contentAnimation}>
+              {typeof content === "function"
+                ? React.cloneElement(
+                    content({
+                      rect: chRect,
+                      contentRect: coRect,
+                      fixedPlacement,
+                    }),
+                    {
+                      ref: contentRef,
+                    }
+                  )
+                : React.isValidElement(content)
+                ? React.cloneElement(content, { ref: contentRef })
+                : null}
+            </animated.div>
+          </div>
         ) : null}
       </Portal>
     </React.Fragment>
