@@ -4,6 +4,7 @@ import { Form } from "../form";
 import { Field } from "../field";
 import { Input } from "../../input";
 import { Container, Row, Col } from "../../layout";
+import { Button } from "../../button";
 
 export default {
   title: "Form",
@@ -35,7 +36,9 @@ export const formUsage = () => {
             return <Input {...field} error={meta.error} />;
           }}
         </Field>
-        <button type="submit">submit</button>
+        <Button type="primary" block size="lg" htmlType="submit">
+          Submit
+        </Button>
       </Form>
     </div>
   );
@@ -90,7 +93,9 @@ export const CustomizeLayout = () => {
           </Field>
         </Row>
       </Container>
-      <button type="submit">submit</button>
+      <Button type="primary" block size="lg" htmlType="submit">
+        Submit
+      </Button>
     </Form>
   );
 };

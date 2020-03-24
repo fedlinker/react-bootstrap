@@ -23,11 +23,17 @@ export enum EButtonType {
 export type IButtonTypeKey = keyof typeof EButtonType;
 export type IButtonSizeKey = ISizeType;
 
-export interface IButtonProps {
+export interface IButtonProps
+  extends Omit<
+    React.ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>,
+    "size" | "type" | "style"
+  > {
   /**
    * button type.
    */
   type?: IButtonTypeKey;
+
+  htmlType?: "submit" | "reset" | "button";
 
   /**
    * style of button wrapper.
@@ -96,6 +102,8 @@ export const Button = forwardRef<
     target,
     outline,
     link,
+    htmlType,
+    ...rest
   } = props;
   const handleClick = () => {
     if (loading || !onClick || disabled) {
@@ -227,6 +235,8 @@ export const Button = forwardRef<
 
   return (
     <ElementType
+      {...rest}
+      type={htmlType}
       ref={ref as any}
       href={link ? href : undefined}
       target={link ? target : undefined}
