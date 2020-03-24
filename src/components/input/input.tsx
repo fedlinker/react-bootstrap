@@ -8,19 +8,20 @@ export interface IInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "style"> {
   size?: ISizeType;
   style?: Interpolation;
+  error?: string | boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, IInputProps>(
   (props, ref) => {
-    const { value, style, onChange, size, ...rest } = props;
+    const { value, style, onChange, size, error, ...rest } = props;
 
     const baseStyles = useMemo(() => {
       return getCss({
         boxSizing: "border-box",
         outline: "none",
         border: "1px solid",
-        borderColor: "inputBorder",
-        color: "input",
+        borderColor: error ? "danger" : "inputBorder",
+        color: error ? "danger" : "input",
         transition: "all 0.3s",
         backgroundColor: "background",
         lineHeight: "body",
@@ -31,11 +32,14 @@ export const Input = React.forwardRef<HTMLInputElement, IInputProps>(
         },
         "&:focus": {
           border: "1px solid",
-          borderColor: "primary",
-          boxShadow: t => `0 0 0 3px ${transparentize(0.5)(t.colors.primary)}`,
+          borderColor: error ? "danger" : "primary",
+          boxShadow: t =>
+            `0 0 0 3px ${transparentize(0.5)(
+              t.colors[error ? "danger" : "primary"]
+            )}`,
         },
       });
-    }, []);
+    }, [error]);
 
     const sizeStyles = useMemo(() => {
       const isSm = size === ESize.sm;

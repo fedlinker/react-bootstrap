@@ -2705,6 +2705,11 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@types/yup@^0.26.33":
+  version "0.26.33"
+  resolved "https://registry.npm.taobao.org/@types/yup/download/@types/yup-0.26.33.tgz#301faab47b952a4a5f9a06246942cc7cbd09cd95"
+  integrity sha1-MB+qtHuVKkpfmgYkaULMfL0JzZU=
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.npm.taobao.org/@webassemblyjs/ast/download/@webassemblyjs/ast-1.8.5.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40webassemblyjs%2Fast%2Fdownload%2F%40webassemblyjs%2Fast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"

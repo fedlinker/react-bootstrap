@@ -1,5 +1,7 @@
+/** @jsx jsx */
 import React from "react";
 import { Formik, Form as FormikForm, FormikValues, FormikConfig } from "formik";
+import { jsx } from "../theme";
 
 export type IFormProps<
   Values extends FormikValues = FormikValues,
@@ -12,6 +14,16 @@ export const Form = <
 >(
   props: IFormProps<Values, ExtraProps>
 ) => {
-  const { ...formikProps } = props;
-  return <Formik<Values, ExtraProps> {...formikProps}></Formik>;
+  const { children } = props;
+  return (
+    <Formik<Values, ExtraProps> {...props}>
+      {props => {
+        return (
+          <FormikForm>
+            {typeof children === "function" ? children(props) : children}
+          </FormikForm>
+        );
+      }}
+    </Formik>
+  );
 };
