@@ -35,6 +35,10 @@ export function Field<Val = any, FormVals extends object = {}>(
     )}`;
   }, []);
 
+  const error = React.useMemo(() => {
+    return meta.touched ? meta.error : undefined;
+  }, [meta]);
+
   return (
     <FormikField {...rest}>
       {(p: FieldProps<Val, FormVals>) => {
@@ -45,7 +49,7 @@ export function Field<Val = any, FormVals extends object = {}>(
                 htmlFor={labelID}
                 css={getCss({
                   display: "inline-block",
-                  color: "text",
+                  color: error ? "danger" : "text",
                   fontSize: 2,
                   marginBottom: 3,
                 })}
@@ -57,13 +61,13 @@ export function Field<Val = any, FormVals extends object = {}>(
               ? React.cloneElement(
                   children({
                     ...p,
-                    error: p.meta.touched ? p.meta.error : undefined,
+                    error,
                   }),
                   { id: labelID }
                 )
               : children}
             <div css={getCss({ marginBottom: 5 })}>
-              {meta.error && meta.touched ? (
+              {error ? (
                 <span
                   css={getCss({
                     color: "danger",
