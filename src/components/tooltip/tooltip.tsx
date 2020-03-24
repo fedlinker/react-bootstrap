@@ -3,7 +3,7 @@ import React from "react";
 import { Popper, IPopperProps } from "../popper";
 import { jsx, getCss } from "../theme";
 
-export interface ITooltipProps extends IPopperProps {}
+export interface ITooltipProps extends Omit<IPopperProps, "offset"> {}
 
 export const Tooltip = (props: ITooltipProps) => {
   const { content, placement, ...rest } = props;
@@ -17,15 +17,6 @@ export const Tooltip = (props: ITooltipProps) => {
       fontSize: 1,
     });
   }, []);
-
-  const placementStyles = React.useMemo(() => {
-    return getCss({
-      marginTop: placement!.match("bottom") ? "6px" : "",
-      marginLeft: placement!.match("right") ? "6px" : "",
-      marginBottom: placement!.match("top") ? "6px" : "",
-      marginRight: placement!.match("left") ? "6px" : "",
-    });
-  }, [placement]);
 
   const triangleStyle = React.useMemo(() => {
     const isBottom = placement!.match("bottom");
@@ -79,9 +70,10 @@ export const Tooltip = (props: ITooltipProps) => {
   return (
     <Popper
       {...rest}
+      offset={6}
       placement={placement}
       content={
-        <div css={[wrapperStyles, placementStyles]}>
+        <div css={[wrapperStyles]}>
           <div css={triangleStyle} />
           <div>{content}</div>
         </div>
