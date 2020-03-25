@@ -7,7 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "rm -rf ./lib && tsc",
-    "storybook": "start-storybook",
+    "storybook": "start-storybook -p 20000",
     "gen-changelog": "npm run changelog && git add . && git commit -m 'docs(changelog): update CHANGELOG.md' && git push && git push --tags",
     "changelog": "conventional-changelog -n ./node_modules/@codoonfxd/changelog-config/index.js -i CHANGELOG.md -s -r 0",
     "test": "jest",

@@ -63,6 +63,8 @@ export interface IPopperProps {
     delay: number | IDelayObject;
     placement: IPlacementType;
   }): UseSpringProps<CSSProperties>;
+
+  // scrollListening?: boolean;
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
@@ -77,6 +79,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     contentContainerStyle,
     disabled,
     animationFunc,
+    // scrollListening,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
@@ -84,6 +87,16 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   const childrenRef = React.useRef<HTMLElement>();
   const contentRef = React.useRef<HTMLElement>();
+  // const placementCache = React.useRef<{
+  //   placement: IPlacementType;
+  //   timer?: NodeJS.Timeout;
+  // }>({
+  //   placement: placement!,
+  // });
+
+  // const scrollPos = useScroll(undefined, {
+  //   disabled: !scrollListening || !mount,
+  // });
 
   const sRect = React.useMemo(() => {
     const d =
@@ -96,6 +109,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
       h: d.clientHeight,
     };
   }, [mount]);
+
   // children rect
   const chRect = useRefRect(childrenRef, [mount]);
   // content rect
@@ -106,6 +120,11 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   // fix the placement based on rect
   const fixedPlacement = React.useMemo(() => {
+    // if (placementCache.current.timer) {
+    //   clearTimeout(placementCache.current.timer);
+    //   placementCache.current.timer = undefined;
+    // }
+    // let p = placementCache.current.placement;
     let p = placement!;
     if (chRect && coRect) {
       // fix the placement based on rect
@@ -153,8 +172,12 @@ export const Popper: React.SFC<IPopperProps> = props => {
         }
       }
     }
+    // placementCache.current.placement = p;
+    // placementCache.current.timer = setTimeout(() => {
+    //   placementCache.current.placement = placement!;
+    // }, 1000);
     return p;
-  }, [placement, chRect, coRect, offset, sRect]);
+  }, [placement, chRect, coRect, offset]);
 
   /** leave and enter animations */
   const contentAnimation = useSpring({
@@ -167,77 +190,73 @@ export const Popper: React.SFC<IPopperProps> = props => {
       : {}),
   });
 
-  const contentPositionStyle = React.useMemo<Interpolation>(() => {
+  const contentPositionStyle = React.useMemo<React.CSSProperties>(() => {
     if (!mount) {
       return {};
     }
-    let vals: Interpolation = { top: 0, left: 0 };
+    let vals: React.CSSProperties = { top: 0, left: 0 };
     if (chRect && coRect) {
       const w = (chRect.width - coRect.width) / 2;
       const transHeight = coRect.height + offset!;
       const transWidth = coRect.width + offset!;
+      const baseY = chRect.top + sRect.y;
+      const baseX = chRect.left + sRect.x;
 
       switch (fixedPlacement) {
         case "top":
-          vals.transform = `translate3d(${w + chRect.left}px,${chRect.top -
+          vals.transform = `translate3d(${w + baseX}px,${baseY -
             transHeight}px,0)`;
           break;
         case "topLeft":
-          vals.transform = `translate3d(${chRect.left}px,${chRect.top -
-            transHeight}px,0)`;
+          vals.transform = `translate3d(${baseX}px,${baseY - transHeight}px,0)`;
           break;
         case "topRight":
-          vals.transform = `translate3d(${chRect.left +
+          vals.transform = `translate3d(${baseX +
             chRect.width -
-            coRect.width}px,${chRect.top - transHeight}px,0)`;
+            coRect.width}px,${baseY - transHeight}px,0)`;
           break;
         case "bottom":
-          vals.transform = `translate3d(${w + chRect.left}px,${chRect.top +
+          vals.transform = `translate3d(${w + baseX}px,${baseY +
             chRect.height +
             offset!}px,0)`;
           break;
         case "bottomLeft":
-          vals.transform = `translate3d(${chRect.left}px,${chRect.top +
+          vals.transform = `translate3d(${baseX}px,${baseY +
             chRect.height +
             offset!}px,0)`;
           break;
         case "bottomRight":
-          vals.transform = `translate3d(${chRect.left +
+          vals.transform = `translate3d(${baseX +
             chRect.width -
-            coRect.width}px,${chRect.top + chRect.height + offset!}px,0)`;
+            coRect.width}px,${baseY + chRect.height + offset!}px,0)`;
           break;
         case "left":
-          vals.transform = `translate3d(${chRect.left -
-            transWidth}px,${chRect.top +
+          vals.transform = `translate3d(${baseX - transWidth}px,${baseY +
             (chRect.height - coRect.height) / 2}px,0)`;
           break;
         case "leftBottom":
-          vals.transform = `translate3d(${chRect.left -
-            transWidth}px,${chRect.top + chRect.height - coRect.height}px,0)`;
+          vals.transform = `translate3d(${baseX - transWidth}px,${baseY +
+            chRect.height -
+            coRect.height}px,0)`;
           break;
         case "leftTop":
-          vals.transform = `translate3d(${chRect.left - transWidth}px,${
-            chRect.top
-          }px,0)`;
+          vals.transform = `translate3d(${baseX - transWidth}px,${baseY}px,0)`;
           break;
         case "right":
-          vals.transform = `translate3d(${chRect.left +
+          vals.transform = `translate3d(${baseX +
             chRect.width +
-            offset!}px,${chRect.top +
-            (chRect.height - coRect.height) / 2}px,0)`;
+            offset!}px,${baseY + (chRect.height - coRect.height) / 2}px,0)`;
           break;
         case "rightBottom":
-          vals.transform = `translate3d(${chRect.left +
+          vals.transform = `translate3d(${baseX +
             chRect.width +
-            offset!}px,${chRect.top + chRect.height - coRect.height}px,0)`;
+            offset!}px,${baseY + chRect.height - coRect.height}px,0)`;
           break;
         case "rightTop":
-          vals.transform = `translate3d(${chRect.left +
+          vals.transform = `translate3d(${baseX +
             chRect.width +
-            offset!}px,${chRect.top}px,0)`;
+            offset!}px,${baseY}px,0)`;
       }
-      (vals.top as number) += sRect.y;
-      (vals.left as number) += sRect.x;
     }
     return vals;
   }, [chRect, sRect, coRect, fixedPlacement, mount]);
@@ -332,9 +351,9 @@ export const Popper: React.SFC<IPopperProps> = props => {
                 position: "absolute",
                 boxSizing: "border-box",
               },
-              contentPositionStyle,
               contentContainerStyle,
             ]}
+            style={contentPositionStyle}
           >
             <animated.div style={contentAnimation}>
               {typeof content === "function"
@@ -365,4 +384,5 @@ Popper.defaultProps = {
   delay: 0,
   autoFixPlacement: true,
   offset: 0,
+  // scrollListening: true,
 };

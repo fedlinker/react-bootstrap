@@ -1,1 +1,2 @@
-export * from "./useRefRect";
+export * from "./use-ref-rect";
+export * from "./use-scroll";

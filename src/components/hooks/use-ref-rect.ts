@@ -10,6 +10,9 @@ export const useRefRect = (
   );
 
   React.useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
     const newRect = ref.current?.getBoundingClientRect();
     if (newRect && !isEqual(rect, newRect)) {
       setRect(newRect);
