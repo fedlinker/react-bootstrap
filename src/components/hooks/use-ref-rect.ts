@@ -2,7 +2,7 @@ import React from "react";
 import isEqual from "lodash/isEqual";
 
 export const useRefRect = (
-  ref: React.MutableRefObject<HTMLElement | undefined>,
+  ref: React.MutableRefObject<HTMLElement | undefined | null>,
   deps: React.DependencyList = []
 ) => {
   const [rect, setRect] = React.useState<DOMRect | undefined>(

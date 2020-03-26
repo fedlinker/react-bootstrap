@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React from "react";
 import { jsx, getCss } from "../theme";
-import { transparentizeTheme } from "../utils/colors";
+import { darkenTheme } from "../utils/colors";
 
 export interface IMenuItemProps {
   path: string;
@@ -10,24 +10,36 @@ export interface IMenuItemProps {
   children?: React.ReactNode;
 }
 
+export const baseMenuItemStyle = getCss({
+  display: "flex",
+  color: "text",
+  boxSizing: "border-box",
+  paddingLeft: 6,
+  paddingRight: 6,
+  paddingTop: 1,
+  paddingBottom: 1,
+  cursor: "pointer",
+  transition: "all 0.3s",
+  width: "100%",
+  clear: "both",
+  textAlign: "inherit",
+  backgroundColor: "transparent",
+  "&:hover": {
+    color: darkenTheme("text", 0.05),
+    backgroundColor: "light",
+  },
+});
+
 export const MenuItem: React.SFC<IMenuItemProps> = props => {
   const { children, path, onClick, level } = props;
   return (
     <div
-      css={getCss({
-        color: "text",
-        boxSizing: "border-box",
-        paddingLeft: `${8 + 12 * level!}px`,
-        lineHeight: "64px",
-        borderBottom: `1px solid`,
-        borderBottomColor: "border",
-        cursor: "pointer",
-        transition: "all 0.3s",
-        "&:hover": {
-          color: "primary",
-          backgroundColor: transparentizeTheme("primary", 0.95),
-        },
-      })}
+      css={[
+        baseMenuItemStyle,
+        getCss({
+          paddingLeft: t => `calc(${t.space[6] || 0} + ${0.75 * level!}rem)`,
+        }),
+      ]}
       onClick={() => onClick && onClick(path)}
     >
       {children}
