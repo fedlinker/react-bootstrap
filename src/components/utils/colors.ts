@@ -15,9 +15,10 @@ import {
   complement,
   invert,
   parseToRgb,
+  math,
 } from "polished";
 import { get } from "@styled-system/css";
-import { BASE_COLORS, ITheme } from "../theme";
+import { BASE_COLORS, ITheme, CONSTANT } from "../theme";
 
 const g = (t: ITheme, c: string) => {
   return get(t, `colors.${c}`, c)
@@ -56,6 +57,15 @@ export const alphaTheme = (c: string, n: number) => (t: ITheme) =>
 
 export const mixTheme = (a: string, b: string, n = 0.5) => (t: ITheme) =>
   mix(n, g(t, a), g(t, b));
+
+export const themeColorLevel = (c: string, level = 0) => (t: ITheme) => {
+  const baseColor = level > 0 ? BASE_COLORS.black : BASE_COLORS.white;
+  return mix(
+    Math.abs(level * CONSTANT.THEME_COLOR_INTERVAL),
+    baseColor,
+    g(t, c)
+  );
+};
 
 export const complementTheme = (c: string) => (t: ITheme) => {
   return complement(g(t, c));
