@@ -1,25 +1,26 @@
 /** @jsx jsx */
 import React, { CSSProperties } from "react";
+import { Placement, Modifiers } from "popper.js";
 import { animated, useSpring, UseSpringProps } from "react-spring";
 import { easeCubicInOut } from "d3-ease";
+import { Manager, Reference, Popper as PopperJSPopper } from "react-popper";
 import { Portal } from "../portal";
-import { IPlacementType } from "../enum/placement";
-import { jsx, Interpolation } from "../theme";
-import { useRefRect } from "../hooks";
+import { jsx, Interpolation, getCss } from "../theme";
 
 export type IPopperTriggerType = "hover" | "click";
 export interface IDelayObject {
   show: number;
   hide: number;
 }
+
 export type IContentRenderPropsType = (props: {
   rect: DOMRect;
   contentRect?: DOMRect;
-  fixedPlacement: IPlacementType;
+  fixedPlacement: Placement;
 }) => React.ReactNode;
 
 export interface IPopperProps {
-  placement?: IPlacementType;
+  placement?: Placement;
   /**
    * trigger content
    */
@@ -36,16 +37,6 @@ export interface IPopperProps {
    * show and hide animation delay durations.
    */
   delay?: number | IDelayObject;
-  /**
-   * auto change the placement based on position.
-   */
-  autoFixPlacement?: boolean;
-
-  /**
-   * the distance between content and children.
-   * number unit is pixel
-   */
-  offset?: number;
 
   /**
    * disable the popper content
@@ -61,10 +52,18 @@ export interface IPopperProps {
   animationFunc?(value: {
     visible: boolean;
     delay: number | IDelayObject;
-    placement: IPlacementType;
+    placement: Placement;
   }): UseSpringProps<CSSProperties>;
 
-  // scrollListening?: boolean;
+  /**
+   * if the value is false, popper content will not be rendered in portal.
+   * default value is false.
+   */
+  inline?: boolean;
+
+  modifiers?: Modifiers;
+
+  arrowStyle?: Interpolation;
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
@@ -74,12 +73,12 @@ export const Popper: React.SFC<IPopperProps> = props => {
     trigger,
     delay,
     children,
-    autoFixPlacement,
-    offset,
     contentContainerStyle,
     disabled,
     animationFunc,
-    // scrollListening,
+    inline,
+    modifiers,
+    arrowStyle,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
@@ -87,97 +86,9 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   const childrenRef = React.useRef<HTMLElement>();
   const contentRef = React.useRef<HTMLElement>();
-  // const placementCache = React.useRef<{
-  //   placement: IPlacementType;
-  //   timer?: NodeJS.Timeout;
-  // }>({
-  //   placement: placement!,
-  // });
-
-  // const scrollPos = useScroll(undefined, {
-  //   disabled: !scrollListening || !mount,
-  // });
-
-  const sRect = React.useMemo(() => {
-    const d =
-      childrenRef.current?.ownerDocument?.documentElement ||
-      document.documentElement;
-    return {
-      x: d.scrollLeft,
-      y: d.scrollTop,
-      w: d.clientWidth,
-      h: d.clientHeight,
-    };
-  }, [mount]);
-
-  // children rect
-  const chRect = useRefRect(childrenRef, [mount]);
-  // content rect
-  const coRect = useRefRect(contentRef, [mount]);
 
   /** animation timer */
   const timer = React.useRef<NodeJS.Timeout | null>(null);
-
-  // fix the placement based on rect
-  const fixedPlacement = React.useMemo(() => {
-    // if (placementCache.current.timer) {
-    //   clearTimeout(placementCache.current.timer);
-    //   placementCache.current.timer = undefined;
-    // }
-    // let p = placementCache.current.placement;
-    let p = placement!;
-    if (chRect && coRect) {
-      // fix the placement based on rect
-      if (autoFixPlacement) {
-        if (p.indexOf("top") === 0) {
-          if (coRect.left < 0) {
-            p = "topLeft";
-          }
-          if (coRect.left + coRect.width > sRect.w) {
-            p = "topRight";
-          }
-          if (chRect.top < coRect.height + offset!) {
-            p = p.replace("top", "bottom") as IPlacementType;
-          }
-        } else if (p.indexOf("bottom") === 0) {
-          if (coRect.left < 0) {
-            p = "bottomLeft";
-          }
-          if (coRect.left + coRect.width > sRect.w) {
-            p = "bottomRight";
-          }
-          if (chRect.top + chRect.height + coRect.height + offset! > sRect.h) {
-            p = p.replace("bottom", "top") as IPlacementType;
-          }
-        } else if (p.indexOf("left") === 0) {
-          if (coRect.top < 0) {
-            p = "leftTop";
-          }
-          if (coRect.top + coRect.height > sRect.h) {
-            p = "leftBottom";
-          }
-          if (chRect.left < coRect.width + offset!) {
-            p = p.replace("left", "right") as IPlacementType;
-          }
-        } else if (p.indexOf("right") === 0) {
-          if (coRect.top < 0) {
-            p = "rightTop";
-          }
-          if (coRect.top + coRect.height > sRect.h) {
-            p = "rightBottom";
-          }
-          if (chRect.left + chRect.width + coRect.width + offset! > sRect.w) {
-            p = p.replace("right", "left") as IPlacementType;
-          }
-        }
-      }
-    }
-    // placementCache.current.placement = p;
-    // placementCache.current.timer = setTimeout(() => {
-    //   placementCache.current.placement = placement!;
-    // }, 1000);
-    return p;
-  }, [placement, chRect, coRect, offset]);
 
   /** leave and enter animations */
   const contentAnimation = useSpring({
@@ -186,103 +97,23 @@ export const Popper: React.SFC<IPopperProps> = props => {
     delay:
       typeof delay === "number" ? delay : visible ? delay?.show : delay?.hide,
     ...(typeof animationFunc === "function"
-      ? animationFunc({ visible, delay: delay!, placement: fixedPlacement })
+      ? animationFunc({ visible, delay: delay!, placement: placement! })
       : {}),
   });
 
-  const contentPositionStyle = React.useMemo<React.CSSProperties>(() => {
-    if (!mount) {
-      return {};
-    }
-    let vals: React.CSSProperties = { top: 0, left: 0 };
-    if (chRect && coRect) {
-      const w = (chRect.width - coRect.width) / 2;
-      const transHeight = coRect.height + offset!;
-      const transWidth = coRect.width + offset!;
-      const baseY = chRect.top + sRect.y;
-      const baseX = chRect.left + sRect.x;
-
-      switch (fixedPlacement) {
-        case "top":
-          vals.transform = `translate3d(${w + baseX}px,${baseY -
-            transHeight}px,0)`;
-          break;
-        case "topLeft":
-          vals.transform = `translate3d(${baseX}px,${baseY - transHeight}px,0)`;
-          break;
-        case "topRight":
-          vals.transform = `translate3d(${baseX +
-            chRect.width -
-            coRect.width}px,${baseY - transHeight}px,0)`;
-          break;
-        case "bottom":
-          vals.transform = `translate3d(${w + baseX}px,${baseY +
-            chRect.height +
-            offset!}px,0)`;
-          break;
-        case "bottomLeft":
-          vals.transform = `translate3d(${baseX}px,${baseY +
-            chRect.height +
-            offset!}px,0)`;
-          break;
-        case "bottomRight":
-          vals.transform = `translate3d(${baseX +
-            chRect.width -
-            coRect.width}px,${baseY + chRect.height + offset!}px,0)`;
-          break;
-        case "left":
-          vals.transform = `translate3d(${baseX - transWidth}px,${baseY +
-            (chRect.height - coRect.height) / 2}px,0)`;
-          break;
-        case "leftBottom":
-          vals.transform = `translate3d(${baseX - transWidth}px,${baseY +
-            chRect.height -
-            coRect.height}px,0)`;
-          break;
-        case "leftTop":
-          vals.transform = `translate3d(${baseX - transWidth}px,${baseY}px,0)`;
-          break;
-        case "right":
-          vals.transform = `translate3d(${baseX +
-            chRect.width +
-            offset!}px,${baseY + (chRect.height - coRect.height) / 2}px,0)`;
-          break;
-        case "rightBottom":
-          vals.transform = `translate3d(${baseX +
-            chRect.width +
-            offset!}px,${baseY + chRect.height - coRect.height}px,0)`;
-          break;
-        case "rightTop":
-          vals.transform = `translate3d(${baseX +
-            chRect.width +
-            offset!}px,${baseY}px,0)`;
-      }
-    }
-    return vals;
-  }, [chRect, sRect, coRect, fixedPlacement, mount]);
-
   React.useEffect(() => {
+    const chEl = childrenRef.current;
+    const coEl = contentRef.current;
     if (disabled) {
       return;
     }
     // show the popper content
     const setShow = () => {
-      if (visible && mount) {
-        return;
-      }
       setVisible(true);
-      setMount(true);
     };
     // hide the popper content
     const setHide = () => {
-      if (!mount && !visible) {
-        return;
-      }
       setVisible(false);
-      timer.current = setTimeout(() => {
-        setMount(false);
-        timer.current = null;
-      }, 200);
     };
     const d =
       childrenRef.current?.ownerDocument?.documentElement ||
@@ -294,22 +125,9 @@ export const Popper: React.SFC<IPopperProps> = props => {
       }
       // true: the event target is contained in content or children.
       const isContained =
-        (childrenRef.current && childrenRef.current.contains(e.target)) ||
-        (contentRef.current && contentRef.current.contains(e.target));
-      if (timer.current) {
-        clearTimeout(timer.current);
-        timer.current = null;
-      }
+        (chEl && chEl.contains(e.target)) || (coEl && coEl.contains(e.target));
 
       // when focus, stop other event
-      if (e.type === "focus") {
-        setShow();
-        return;
-      } else if (e.type === "blur") {
-        setHide();
-        return;
-      }
-
       if (isContained) {
         setShow();
       } else {
@@ -319,62 +137,95 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
     if (childrenRef.current) {
       const eventStr = trigger === "hover" ? "mousemove" : "click";
-      d.addEventListener(eventStr, handleTriggerEvent);
 
       // when blured, hide the popper content
+      d.addEventListener(eventStr, handleTriggerEvent);
       if (trigger === "hover") {
-        childrenRef.current.addEventListener("focus", handleTriggerEvent);
         childrenRef.current.addEventListener("blur", handleTriggerEvent);
       }
       return () => {
         // remove listeners
         d.removeEventListener(eventStr, handleTriggerEvent);
         if (trigger === "hover") {
-          childrenRef.current?.removeEventListener("focus", handleTriggerEvent);
           childrenRef.current?.removeEventListener("blur", handleTriggerEvent);
         }
       };
     }
     return;
-  }, [children, childrenRef.current, visible, mount, timer.current, trigger]);
+  }, [children, childrenRef.current, visible, mount, trigger]);
+
+  React.useEffect(() => {
+    if (visible) {
+      if (mount) {
+        return;
+      }
+      setMount(true);
+    } else {
+      if (!mount) {
+        return;
+      }
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+      timer.current = setTimeout(() => {
+        setMount(false);
+        timer.current = null;
+      }, 200);
+    }
+  }, [visible]);
+
+  const WrapperComp = React.useMemo(() => {
+    if (inline) {
+      return React.Fragment;
+    } else {
+      return Portal;
+    }
+  }, [inline]);
 
   return (
-    <React.Fragment>
-      {React.isValidElement(children)
-        ? React.cloneElement(children, { ref: childrenRef })
-        : null}
-      <Portal>
-        {mount && chRect ? (
-          <div
-            css={[
-              {
-                position: "absolute",
-                boxSizing: "border-box",
-              },
-              contentContainerStyle,
-            ]}
-            style={contentPositionStyle}
+    <Manager>
+      <Reference innerRef={childrenRef}>
+        {({ ref }) => {
+          if (React.isValidElement(children)) {
+            return React.cloneElement(children, { ref });
+          }
+          return null;
+        }}
+      </Reference>
+      {mount ? (
+        <WrapperComp>
+          <PopperJSPopper
+            placement={placement}
+            innerRef={contentRef}
+            modifiers={modifiers}
           >
-            <animated.div style={contentAnimation}>
-              {typeof content === "function"
-                ? React.cloneElement(
-                    content({
-                      rect: chRect,
-                      contentRect: coRect,
-                      fixedPlacement,
-                    }),
-                    {
-                      ref: contentRef,
-                    }
-                  )
-                : React.isValidElement(content)
-                ? React.cloneElement(content, { ref: contentRef })
-                : null}
-            </animated.div>
-          </div>
-        ) : null}
-      </Portal>
-    </React.Fragment>
+            {({ ref, style, arrowProps, placement }) => {
+              return (
+                <div
+                  style={style}
+                  ref={ref}
+                  data-placement={placement}
+                  css={[contentContainerStyle]}
+                >
+                  <animated.div style={contentAnimation}>
+                    {content}
+                    {arrowStyle ? (
+                      <div
+                        ref={arrowProps.ref}
+                        style={arrowProps.style}
+                        data-placement={placement}
+                        css={arrowStyle}
+                      />
+                    ) : null}
+                  </animated.div>
+                </div>
+              );
+            }}
+          </PopperJSPopper>
+        </WrapperComp>
+      ) : null}
+    </Manager>
   );
 };
 
@@ -382,7 +233,19 @@ Popper.defaultProps = {
   placement: "bottom",
   trigger: "hover",
   delay: 0,
-  autoFixPlacement: true,
-  offset: 0,
-  // scrollListening: true,
+  inline: false,
 };
+
+// position: "absolute",
+// top: 0,
+// left: 0,
+// ":after": {
+//   content: "''",
+//   position: "absolute",
+//   backgroundColor: "text",
+//   color: "background",
+//   width: 0,
+//   height: 0,
+//   borderStyle: "solid",
+//   borderWidth: "0 6px 6px 6px",
+//   borderBottomColor: "text",

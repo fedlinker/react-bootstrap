@@ -53,37 +53,37 @@ export const PlacementUsage = () => {
           paddingBottom: "16px",
         }}
       >
-        <Popper content={content} placement="topLeft" offset={8}>
-          <Button style={{ marginRight: "16px" }}>top left</Button>
+        <Popper content={content} placement="top-start">
+          <Button style={{ marginRight: "16px" }}>top-start</Button>
         </Popper>
-        <Popper content={content} placement="top" offset={8}>
-          <Button style={{ marginRight: "16px" }}>top center</Button>
+        <Popper content={content} placement="top">
+          <Button style={{ marginRight: "16px" }}>top</Button>
         </Popper>
-        <Popper content={content} placement="topRight" offset={8}>
-          <Button>top right</Button>
+        <Popper content={content} placement="top-end">
+          <Button>top-end</Button>
         </Popper>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        <div style={{}}>
-          <Popper content={content} placement="leftTop" offset={8}>
-            <Button style={{ marginBottom: "16px" }}>left top</Button>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Popper content={content} placement="left-start">
+            <Button style={{ marginBottom: "16px" }}>left-start</Button>
           </Popper>
-          <Popper content={content} placement="left" offset={8}>
-            <Button style={{ marginBottom: "16px" }}>left center</Button>
+          <Popper content={content} placement="left">
+            <Button style={{ marginBottom: "16px" }}>left</Button>
           </Popper>
-          <Popper content={content} placement="leftBottom" offset={8}>
-            <Button>left bottom</Button>
+          <Popper content={content} placement="left-end">
+            <Button>left-end</Button>
           </Popper>
         </div>
-        <div style={{}}>
-          <Popper content={content} placement="rightTop" offset={8}>
-            <Button style={{ marginBottom: "16px" }}>right top</Button>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Popper content={content} placement="right-start">
+            <Button style={{ marginBottom: "16px" }}>right-start</Button>
           </Popper>
-          <Popper content={content} placement="right" offset={8}>
-            <Button style={{ marginBottom: "16px" }}>right center</Button>
+          <Popper content={content} placement="right">
+            <Button style={{ marginBottom: "16px" }}>right</Button>
           </Popper>
-          <Popper content={content} placement="rightBottom" offset={8}>
-            <Button>right bottom</Button>
+          <Popper content={content} placement="right-end">
+            <Button>right-end</Button>
           </Popper>
         </div>
       </div>
@@ -94,14 +94,14 @@ export const PlacementUsage = () => {
           paddingTop: "16px",
         }}
       >
-        <Popper content={content} placement="bottomLeft" offset={8}>
-          <Button style={{ marginRight: "16px" }}>bottom left</Button>
+        <Popper content={content} placement="bottom-start">
+          <Button style={{ marginRight: "16px" }}>bottom-start</Button>
         </Popper>
-        <Popper content={content} placement="bottom" offset={8}>
-          <Button style={{ marginRight: "16px" }}>bottom center</Button>
+        <Popper content={content} placement="bottom">
+          <Button style={{ marginRight: "16px" }}>bottom</Button>
         </Popper>
-        <Popper content={content} placement="bottomRight" offset={8}>
-          <Button>bottom right</Button>
+        <Popper content={content} placement="bottom-end">
+          <Button>bottom-end</Button>
         </Popper>
       </div>
     </div>
@@ -123,12 +123,17 @@ export const TriggerUsage = () => {
   );
   return (
     <div style={{ padding: "64px" }}>
-      <Popper content={content} placement="bottom" trigger="click">
-        <Button style={{ marginBottom: "16px" }}>click trigger</Button>
-      </Popper>
-      <Popper content={content} placement="bottom" trigger="hover">
-        <Button>hover trigger</Button>
-      </Popper>
+      <div>
+        <Popper content={content} placement="top" trigger="click">
+          <Button style={{ marginBottom: "16px" }}>click trigger</Button>
+        </Popper>
+      </div>
+      <div>
+        <Popper content={content} placement="bottom" trigger="hover">
+          <Button>hover trigger</Button>
+        </Popper>
+      </div>
+
       {times(100, o => {
         return <div key={o}>{o}</div>;
       })}
@@ -194,6 +199,135 @@ export const CustomizeAnimation = () => {
       >
         <Button style={{ marginBottom: "16px" }}>Customize animation</Button>
       </Popper>
+    </div>
+  );
+};
+
+export const NestedPopper = () => {
+  return (
+    <div style={{ padding: "600px" }}>
+      <Popper
+        content={
+          <Popper
+            content={
+              <Popper content={"Nested3"} inline>
+                <Button>Nested2</Button>
+              </Popper>
+            }
+            inline
+          >
+            <Button>Nested1</Button>
+          </Popper>
+        }
+      >
+        <Button>Nested</Button>
+      </Popper>
+    </div>
+  );
+};
+
+export const InnerPopper = () => {
+  return (
+    <div
+      style={{
+        position: "relative",
+        overflow: "auto",
+        margin: "300px 32px",
+        border: "1px solid #eee",
+        width: "300px",
+        height: "300px",
+        background: "#f3f3f3",
+      }}
+    >
+      <div style={{ padding: "360px" }}>
+        <Popper
+          content={
+            <div style={{ padding: "3px 6px", background: "#fff" }}>
+              popper content
+            </div>
+          }
+          trigger="click"
+          placement="bottom-start"
+          arrowStyle={{
+            position: "absolute",
+            width: "16px",
+            height: "8px",
+            "&[data-placement*='bottom']": {
+              top: 0,
+              left: 0,
+              marginTop: "-8px",
+              "&::before": {
+                borderWidth: "0 8px 8px 8px",
+                borderColor: "transparent transparent #232323 transparent",
+              },
+            },
+            "&[data-placement*='top']": {
+              bottom: 0,
+              left: 0,
+              marginBottom: "-8px",
+              "&::before": {
+                borderWidth: "8px 8px 0 8px",
+                borderColor: "#232323 transparent transparent transparent",
+              },
+            },
+            "&[data-placement*='right']": {
+              left: 0,
+              "&::before": {
+                borderWidth: "8px 8px 8px 0",
+                borderColor: "transparent #232323 transparent transparent",
+              },
+            },
+            "&[data-placement*='left']": {
+              right: 0,
+              "&::before": {
+                borderWidth: "8px 0 8px 8px",
+                borderColor: "transparent transparent transparent #232323",
+              },
+            },
+            "&::before": {
+              content: "''",
+              margin: "auto",
+              display: "block",
+              width: 0,
+              height: 0,
+              borderStyle: "solid",
+            },
+          }}
+          modifiers={{
+            offset: {
+              fn: data => {
+                const { offsets, placement } = data;
+                const { popper } = offsets;
+                return {
+                  ...data,
+                  offsets: {
+                    ...data.offsets,
+                    popper: {
+                      ...popper,
+                      top:
+                        popper.top +
+                        (placement.indexOf("bottom") === 0
+                          ? 8
+                          : placement.indexOf("top") === 0
+                          ? -8
+                          : 0),
+                      left:
+                        popper.left +
+                        (placement.indexOf("left") === 0
+                          ? 8
+                          : placement.indexOf("right") === 0
+                          ? -8
+                          : 0),
+                    },
+                  },
+                };
+              },
+            },
+          }}
+        >
+          <Button>Inner popper</Button>
+        </Popper>
+      </div>
     </div>
   );
 };
