@@ -5,7 +5,7 @@ import { animated, useSpring, UseSpringProps } from "react-spring";
 import { easeCubicInOut } from "d3-ease";
 import { Manager, Reference, Popper as PopperJSPopper } from "react-popper";
 import { Portal } from "../portal";
-import { jsx, Interpolation, getCss } from "../theme";
+import { jsx, Interpolation } from "../theme";
 
 export type IPopperTriggerType = "hover" | "click";
 export interface IDelayObject {
