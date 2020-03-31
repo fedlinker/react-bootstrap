@@ -4,36 +4,49 @@ import { jsx, getCss } from "../theme";
 import { SolidAngleDown } from "@fedlinker/font-awesome";
 import { baseMenuItemStyle } from "./MenuItem";
 import { useRefRect } from "../hooks";
-import { animated, useSpring } from "react-spring";
+// import { animated, useSpring } from "react-spring";
 import { Popper } from "../popper";
 import { transparentizeTheme } from "../utils/colors";
+import { MenuContext } from "./menu-context";
+import { IMenuChildType } from "./Menu";
+import map from "lodash/map";
 
 export interface ISubMenuProps {
   title: React.ReactNode;
   level?: number;
-  children?: React.ReactNode;
+  children?: IMenuChildType[] | IMenuChildType;
   defaultCollapse?: boolean;
   mode?: "pop" | "inline";
 }
 
-export const SubMenu: React.SFC<ISubMenuProps> = props => {
+export const SubMenu: React.FC<ISubMenuProps> = props => {
   const { title, children, level, defaultCollapse, mode } = props;
   const [collapse, setCollapse] = React.useState<boolean>(defaultCollapse!);
+  const [open, setOpen] = React.useState<boolean>(false);
   const childrenRef = React.useRef<HTMLDivElement>(null);
-  const childrenRect = useRefRect(childrenRef);
+  const childrenRect = useRefRect(childrenRef, [collapse]);
 
-  const animationStyle = useSpring({
-    height: collapse ? 0 : childrenRect?.height,
-    overflow: "hidden",
-  });
+  const ctx = React.useContext(MenuContext);
+
+  // const animationStyle = useSpring({
+  //   height: collapse ? 0 : childrenRect?.height,
+  //   overflow: "hidden",
+  // });
+
+  const isInline = React.useMemo(() => {
+    return mode === "inline";
+  }, [mode]);
 
   const menuItems = (
     <div ref={childrenRef}>
-      {React.Children.map(children, (c, i) => {
-        return React.cloneElement(c as React.ReactElement, {
-          level: mode === "pop" ? 0 : level! + 1,
-        });
-      })}
+      {map(
+        Array.isArray(children) ? children : [children],
+        (c: IMenuChildType, i) => {
+          return React.cloneElement(c, {
+            level: mode === "pop" ? 0 : level! + 1,
+          });
+        }
+      )}
     </div>
   );
 
@@ -44,8 +57,9 @@ export const SubMenu: React.SFC<ISubMenuProps> = props => {
         getCss({
           paddingLeft: t => `calc(${t.space[6] || 0} + ${0.75 * level!}rem)`,
           "& > *": {
-            transition: "all 0.3s",
+            transition: "all 0.2s",
           },
+          backgroundColor: open ? "light" : undefined,
         }),
       ]}
       onClick={() => {
@@ -55,10 +69,20 @@ export const SubMenu: React.SFC<ISubMenuProps> = props => {
     >
       <div css={{ flex: 1 }}>{title}</div>
       <SolidAngleDown
-        style={{ transform: `rotate(${collapse ? 0 : 180}deg)` }}
+        style={{
+          transform: `rotate(${
+            mode === "inline" ? (collapse ? 0 : 180) : -90
+          }deg)`,
+        }}
       />
     </div>
   );
+
+  React.useLayoutEffect(() => {
+    if (!ctx.open && open) {
+      setOpen(false);
+    }
+  }, [ctx.open, open]);
 
   return (
     <Popper
@@ -68,21 +92,29 @@ export const SubMenu: React.SFC<ISubMenuProps> = props => {
             border: "1px solid",
             borderColor: transparentizeTheme("text", 0.85),
             borderRadius: "default",
+            boxShadow: t => `0 0 3px ${t.colors.light}`,
+            overflow: "hidden",
           })}
         >
           {menuItems}
         </div>
       }
-      trigger="click"
+      isOpen={open}
+      onIsOpenChange={newOpen => {
+        if (!ctx.open && ctx.setOpen) {
+          ctx.setOpen(true);
+        }
+        setOpen(newOpen);
+      }}
       placement="right-start"
-      disabled={mode !== "pop"}
+      disabled={isInline}
       inline
     >
       <div>
         {menuTitle}
-        {mode === "inline" ? (
-          <animated.div style={animationStyle}>{menuItems}</animated.div>
-        ) : null}
+        {isInline && !collapse && menuItems
+        // <animated.div style={animationStyle}>{menuItems}</animated.div>
+        }
       </div>
     </Popper>
   );

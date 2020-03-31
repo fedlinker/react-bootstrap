@@ -3,8 +3,9 @@ import React, { CSSProperties } from "react";
 import { Placement, Modifier } from "@popperjs/core";
 import { animated, useSpring, UseSpringProps } from "react-spring";
 import { easeCubicInOut } from "d3-ease";
+import { FunctionInterpolation } from "@emotion/react";
 import { Portal } from "../portal";
-import { jsx, Interpolation, getCss } from "../theme";
+import { jsx, Interpolation, getCss, ITheme } from "../theme";
 import { usePopper } from "./usePopper";
 
 export type IPopperTriggerType = "hover" | "click";
@@ -25,6 +26,8 @@ export interface IPopperLifeCycleProps {
   onClose?(): void;
   onClosed?(): void;
 }
+
+type IColorType = string | FunctionInterpolation<ITheme>;
 
 export interface IPopperProps extends IPopperLifeCycleProps {
   isOpen?: boolean;
@@ -77,8 +80,8 @@ export interface IPopperProps extends IPopperLifeCycleProps {
   modifiers?: Array<Partial<Modifier<any>>>;
 
   arrow?: {
-    borderColor: string;
-    backgroundColor: string;
+    borderColor: IColorType;
+    backgroundColor: IColorType;
   };
 }
 
@@ -287,7 +290,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
           left: 0,
         },
       },
-    });
+    } as any);
   }, [arrow]);
 
   const handleOpenChange = React.useCallback(

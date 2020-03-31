@@ -2,6 +2,7 @@
 import React from "react";
 import { jsx, getCss } from "../theme";
 import { darkenTheme } from "../utils/colors";
+import { MenuContext } from "./menu-context";
 
 export interface IMenuItemProps {
   path: string;
@@ -32,6 +33,8 @@ export const baseMenuItemStyle = getCss({
 
 export const MenuItem: React.SFC<IMenuItemProps> = props => {
   const { children, path, onClick, level } = props;
+  const ctx = React.useContext(MenuContext);
+
   return (
     <div
       css={[
@@ -40,7 +43,11 @@ export const MenuItem: React.SFC<IMenuItemProps> = props => {
           paddingLeft: t => `calc(${t.space[6] || 0} + ${0.75 * level!}rem)`,
         }),
       ]}
-      onClick={() => onClick && onClick(path)}
+      onClick={() => {
+        onClick && onClick(path);
+        ctx.setOpen && ctx.setOpen(false);
+        ctx.onClick && ctx.onClick(path);
+      }}
     >
       {children}
     </div>
