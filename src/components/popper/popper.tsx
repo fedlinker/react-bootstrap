@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import React, { CSSProperties } from "react";
-import { Placement, Modifiers } from "popper.js";
+import { Placement, Modifier } from "@popperjs/core";
 import { animated, useSpring, UseSpringProps } from "react-spring";
 import { easeCubicInOut } from "d3-ease";
-import { Manager, Reference, Popper as PopperJSPopper } from "react-popper";
 import { Portal } from "../portal";
-import { jsx, Interpolation } from "../theme";
+import { jsx, Interpolation, getCss } from "../theme";
+import { usePopper } from "./usePopper";
 
 export type IPopperTriggerType = "hover" | "click";
 export interface IDelayObject {
@@ -61,9 +61,12 @@ export interface IPopperProps {
    */
   inline?: boolean;
 
-  modifiers?: Modifiers;
+  modifiers?: Array<Partial<Modifier<any>>>;
 
-  arrowStyle?: Interpolation;
+  arrow?: {
+    borderColor: string;
+    backgroundColor: string;
+  };
 }
 
 export const Popper: React.SFC<IPopperProps> = props => {
@@ -78,14 +81,24 @@ export const Popper: React.SFC<IPopperProps> = props => {
     animationFunc,
     inline,
     modifiers,
-    arrowStyle,
+    arrow,
   } = props;
 
   const [visible, setVisible] = React.useState(false);
   const [mount, setMount] = React.useState(false);
-
-  const childrenRef = React.useRef<HTMLElement>();
-  const contentRef = React.useRef<HTMLElement>();
+  const { popper, reference } = usePopper<
+    HTMLElement,
+    HTMLDivElement,
+    HTMLDivElement
+  >(
+    {
+      placement: placement!,
+      strategy: "absolute",
+      modifiers: modifiers!,
+      hasArrow: !!arrow,
+    },
+    [mount]
+  );
 
   /** animation timer */
   const timer = React.useRef<NodeJS.Timeout | null>(null);
@@ -102,8 +115,8 @@ export const Popper: React.SFC<IPopperProps> = props => {
   });
 
   React.useEffect(() => {
-    const chEl = childrenRef.current;
-    const coEl = contentRef.current;
+    const chEl = reference.current;
+    const coEl = popper.current;
     if (disabled) {
       return;
     }
@@ -115,9 +128,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     const setHide = () => {
       setVisible(false);
     };
-    const d =
-      childrenRef.current?.ownerDocument?.documentElement ||
-      document.documentElement;
+    const d = chEl?.ownerDocument?.documentElement || document.documentElement;
 
     const handleTriggerEvent = (e: Event) => {
       if (!(e.target instanceof HTMLElement)) {
@@ -129,30 +140,128 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
       // when focus, stop other event
       if (isContained) {
+        if (timer.current) {
+          clearTimeout(timer.current);
+          timer.current = null;
+        }
         setShow();
       } else {
         setHide();
       }
     };
 
-    if (childrenRef.current) {
+    if (chEl) {
       const eventStr = trigger === "hover" ? "mousemove" : "click";
 
       // when blured, hide the popper content
       d.addEventListener(eventStr, handleTriggerEvent);
       if (trigger === "hover") {
-        childrenRef.current.addEventListener("blur", handleTriggerEvent);
+        chEl.addEventListener("blur", handleTriggerEvent);
       }
       return () => {
         // remove listeners
         d.removeEventListener(eventStr, handleTriggerEvent);
         if (trigger === "hover") {
-          childrenRef.current?.removeEventListener("blur", handleTriggerEvent);
+          chEl?.removeEventListener("blur", handleTriggerEvent);
         }
       };
     }
     return;
-  }, [children, childrenRef.current, visible, mount, trigger]);
+  }, [children, visible, mount, trigger]);
+
+  const arrowStyles = React.useMemo(() => {
+    if (!arrow) {
+      return {};
+    }
+    const { borderColor: bc, backgroundColor: bgc } = arrow;
+    return getCss({
+      "&[data-popper-placement*='bottom']": {
+        ".bs-popper-arrow": {
+          left: 0,
+          top: "-8px",
+          "&::before,&::after": {
+            borderWidth: "0 8px 8px 8px",
+            borderColor: "transparent",
+          },
+          "&::before": {
+            top: "1px",
+            borderBottomColor: bgc,
+          },
+          "&::after": {
+            borderBottomColor: bc,
+          },
+        },
+      },
+      "&[data-popper-placement*='top']": {
+        ".bs-popper-arrow": {
+          bottom: "-16px",
+          left: 0,
+          "&::before,&::after": {
+            borderWidth: "8px 8px 0 8px",
+            borderColor: "transparent",
+            borderTopColor: "background",
+          },
+          "&::before": {
+            bottom: "9px",
+            borderTopColor: bgc,
+          },
+          "&::after": {
+            borderTopColor: bc,
+          },
+        },
+      },
+      "&[data-popper-placement*='right']": {
+        ".bs-popper-arrow": {
+          left: "-8px",
+          top: 0,
+          "&::before,&::after": {
+            borderWidth: "8px 8px 8px 0",
+            borderColor: "transparent",
+          },
+          "&::before": {
+            left: "1px",
+            borderRightColor: bgc,
+          },
+          "&::after": {
+            borderRightColor: bc,
+          },
+        },
+      },
+      "&[data-popper-placement*='left']": {
+        ".bs-popper-arrow": {
+          right: "-16px",
+          top: 0,
+          "&::before,&::after": {
+            borderWidth: "8px 0 8px 8px",
+            borderColor: "transparent",
+          },
+          "&::before": {
+            right: "9px",
+            borderLeftColor: bgc,
+          },
+          "&::after": {
+            borderLeftColor: bc,
+          },
+        },
+      },
+      ".bs-popper-arrow": {
+        position: "absolute",
+        width: "16px",
+        height: "16px",
+        "&::before,&::after": {
+          content: "''",
+          display: "block",
+          borderStyle: "solid",
+          position: "absolute",
+        },
+        "&::after": {
+          zIndex: -1,
+          top: 0,
+          left: 0,
+        },
+      },
+    });
+  }, [arrow]);
 
   React.useEffect(() => {
     if (visible) {
@@ -184,48 +293,23 @@ export const Popper: React.SFC<IPopperProps> = props => {
   }, [inline]);
 
   return (
-    <Manager>
-      <Reference innerRef={childrenRef}>
-        {({ ref }) => {
-          if (React.isValidElement(children)) {
-            return React.cloneElement(children, { ref });
-          }
-          return null;
-        }}
-      </Reference>
+    <React.Fragment>
+      {React.isValidElement(children)
+        ? React.cloneElement(children, { ref: reference })
+        : null}
       {mount ? (
         <WrapperComp>
-          <PopperJSPopper
-            placement={placement}
-            innerRef={contentRef}
-            modifiers={modifiers}
-          >
-            {({ ref, style, arrowProps, placement }) => {
-              return (
-                <div
-                  style={style}
-                  ref={ref}
-                  data-placement={placement}
-                  css={[contentContainerStyle]}
-                >
-                  <animated.div style={contentAnimation}>
-                    {content}
-                    {arrowStyle ? (
-                      <div
-                        ref={arrowProps.ref}
-                        style={arrowProps.style}
-                        data-placement={placement}
-                        css={arrowStyle}
-                      />
-                    ) : null}
-                  </animated.div>
-                </div>
-              );
-            }}
-          </PopperJSPopper>
+          <div ref={popper} css={[contentContainerStyle, arrowStyles]}>
+            <animated.div style={contentAnimation}>
+              {content}
+              {arrow ? (
+                <div className="bs-popper-arrow" data-popper-arrow />
+              ) : null}
+            </animated.div>
+          </div>
         </WrapperComp>
       ) : null}
-    </Manager>
+    </React.Fragment>
   );
 };
 
@@ -234,6 +318,7 @@ Popper.defaultProps = {
   trigger: "hover",
   delay: 0,
   inline: false,
+  modifiers: [],
 };
 
 // position: "absolute",
