@@ -15,7 +15,7 @@ export const BasicUsage = () => {
 };
 
 export const PlacementUsage = () => {
-  const content = "co";
+  const content = "content";
   return (
     <div style={{ width: "3000px", height: "3000px" }}>
       <div style={{ padding: "64px", width: "600px", height: "600px" }}>
