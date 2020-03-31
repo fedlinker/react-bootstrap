@@ -74,9 +74,9 @@ export const SubMenu: React.SFC<ISubMenuProps> = props => {
         </div>
       }
       trigger="click"
-      placement="leftTop"
-      offset={6}
+      placement="right-start"
       disabled={mode !== "pop"}
+      inline
     >
       <div>
         {menuTitle}

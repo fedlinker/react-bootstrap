@@ -296,3 +296,49 @@ export const InnerPopper = () => {
     </div>
   );
 };
+
+export const ConstrolledPopper = () => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div>
+      <div>
+        <Popper
+          content={
+            <div style={{ padding: "3px 6px", background: "#fff" }}>
+              popper content
+            </div>
+          }
+          isOpen={open}
+          trigger="click"
+          placement="bottom-start"
+          inline
+          arrow={{ borderColor: "#fff", backgroundColor: "#fff" }}
+          onOpen={() => {
+            console.log("open");
+          }}
+          onOpened={() => {
+            console.log("opened");
+          }}
+          onClose={() => {
+            console.log("close");
+          }}
+          onClosed={() => {
+            console.log("closed");
+          }}
+          onIsOpenChange={isOpen => {
+            setOpen(isOpen);
+          }}
+        >
+          <Button>Inner popper</Button>
+        </Popper>
+      </div>
+
+      <div style={{ marginTop: "48px" }}>
+        <div>isOpen: {open ? "true" : "false"}</div>
+        <Button onClick={() => setOpen(!open)}>
+          {open ? "Close" : "Open"}
+        </Button>
+      </div>
+    </div>
+  );
+};

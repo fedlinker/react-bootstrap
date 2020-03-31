@@ -19,7 +19,20 @@ export type IContentRenderPropsType = (props: {
   fixedPlacement: Placement;
 }) => React.ReactNode;
 
-export interface IPopperProps {
+export interface IPopperLifeCycleProps {
+  onOpen?(): void;
+  onOpened?(): void;
+  onClose?(): void;
+  onClosed?(): void;
+}
+
+export interface IPopperProps extends IPopperLifeCycleProps {
+  isOpen?: boolean;
+
+  onIsOpenChange?(isOpen: boolean): void;
+
+  defaultIsOpen?: boolean;
+
   placement?: Placement;
   /**
    * trigger content
@@ -69,6 +82,8 @@ export interface IPopperProps {
   };
 }
 
+const DEFAULT_ANIMATION_DURATION = 200;
+
 export const Popper: React.SFC<IPopperProps> = props => {
   const {
     placement,
@@ -82,10 +97,19 @@ export const Popper: React.SFC<IPopperProps> = props => {
     inline,
     modifiers,
     arrow,
+
+    onClose,
+    onClosed,
+    onOpen,
+    onOpened,
+
+    isOpen,
+    defaultIsOpen,
+    onIsOpenChange,
   } = props;
 
-  const [visible, setVisible] = React.useState(false);
-  const [mount, setMount] = React.useState(false);
+  const [visible, setVisible] = React.useState(defaultIsOpen!);
+  const [mount, setMount] = React.useState(defaultIsOpen!);
   const { popper, reference } = usePopper<
     HTMLElement,
     HTMLDivElement,
@@ -100,13 +124,14 @@ export const Popper: React.SFC<IPopperProps> = props => {
     [mount]
   );
 
-  /** animation timer */
-  const timer = React.useRef<NodeJS.Timeout | null>(null);
+  /** animation Timer */
+  const closeTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const openTimer = React.useRef<NodeJS.Timeout | null>(null);
 
   /** leave and enter animations */
   const contentAnimation = useSpring({
     opacity: visible ? 1 : 0,
-    config: { easing: easeCubicInOut, duration: 200 },
+    config: { easing: easeCubicInOut, duration: DEFAULT_ANIMATION_DURATION },
     delay:
       typeof delay === "number" ? delay : visible ? delay?.show : delay?.hide,
     ...(typeof animationFunc === "function"
@@ -114,20 +139,22 @@ export const Popper: React.SFC<IPopperProps> = props => {
       : {}),
   });
 
+  // show the popper content
+  const setShow = () => {
+    setVisible(true);
+  };
+
+  // hide the popper content
+  const setHide = () => {
+    setVisible(false);
+  };
+
   React.useEffect(() => {
     const chEl = reference.current;
     const coEl = popper.current;
     if (disabled) {
       return;
     }
-    // show the popper content
-    const setShow = () => {
-      setVisible(true);
-    };
-    // hide the popper content
-    const setHide = () => {
-      setVisible(false);
-    };
     const d = chEl?.ownerDocument?.documentElement || document.documentElement;
 
     const handleTriggerEvent = (e: Event) => {
@@ -140,9 +167,9 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
       // when focus, stop other event
       if (isContained) {
-        if (timer.current) {
-          clearTimeout(timer.current);
-          timer.current = null;
+        if (closeTimer.current) {
+          clearTimeout(closeTimer.current);
+          closeTimer.current = null;
         }
         setShow();
       } else {
@@ -263,26 +290,51 @@ export const Popper: React.SFC<IPopperProps> = props => {
     });
   }, [arrow]);
 
+  const handleOpenChange = React.useCallback(
+    (nextIsOpen: boolean) => {
+      if (onIsOpenChange && nextIsOpen !== isOpen && isOpen !== undefined) {
+        onIsOpenChange(nextIsOpen);
+      }
+      setMount(nextIsOpen);
+    },
+    [onIsOpenChange, isOpen]
+  );
+
   React.useEffect(() => {
+    // clear all the current timers
+    if (openTimer.current) {
+      clearTimeout(openTimer.current);
+      openTimer.current = null;
+    }
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+
     if (visible) {
-      if (mount) {
-        return;
-      }
-      setMount(true);
+      onOpen && onOpen();
+      handleOpenChange(true);
+      openTimer.current = setTimeout(() => {
+        onOpened && onOpened();
+        openTimer.current = null;
+      }, DEFAULT_ANIMATION_DURATION);
     } else {
-      if (!mount) {
-        return;
-      }
-      if (timer.current) {
-        clearTimeout(timer.current);
-        timer.current = null;
-      }
-      timer.current = setTimeout(() => {
-        setMount(false);
-        timer.current = null;
-      }, 200);
+      onClose && onClose();
+      closeTimer.current = setTimeout(() => {
+        onClosed && onClosed();
+        handleOpenChange(false);
+        closeTimer.current = null;
+      }, DEFAULT_ANIMATION_DURATION);
     }
   }, [visible]);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setShow();
+    } else {
+      setHide();
+    }
+  }, [isOpen]);
 
   const WrapperComp = React.useMemo(() => {
     if (inline) {
@@ -297,7 +349,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
       {React.isValidElement(children)
         ? React.cloneElement(children, { ref: reference })
         : null}
-      {mount ? (
+      {mount && (
         <WrapperComp>
           <div ref={popper} css={[contentContainerStyle, arrowStyles]}>
             <animated.div style={contentAnimation}>
@@ -308,7 +360,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
             </animated.div>
           </div>
         </WrapperComp>
-      ) : null}
+      )}
     </React.Fragment>
   );
 };
@@ -319,18 +371,5 @@ Popper.defaultProps = {
   delay: 0,
   inline: false,
   modifiers: [],
+  defaultIsOpen: false,
 };
-
-// position: "absolute",
-// top: 0,
-// left: 0,
-// ":after": {
-//   content: "''",
-//   position: "absolute",
-//   backgroundColor: "text",
-//   color: "background",
-//   width: 0,
-//   height: 0,
-//   borderStyle: "solid",
-//   borderWidth: "0 6px 6px 6px",
-//   borderBottomColor: "text",
