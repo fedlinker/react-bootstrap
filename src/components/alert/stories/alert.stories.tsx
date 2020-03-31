@@ -33,3 +33,10 @@ export const LinkColor = () => {
     </Alert>
   ));
 };
+
+export const Dismissing = () => (
+  <Alert type={"warning"} dismissible>
+    <strong>Holy guacamole!</strong> You should check in on some of those fields
+    below.
+  </Alert>
+);
