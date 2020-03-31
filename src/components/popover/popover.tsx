@@ -5,7 +5,7 @@ import { jsx, getCss } from "../theme";
 import { darkenTheme } from "../utils/colors";
 import { IPlacementType } from "../enum/placement";
 
-interface IPopoverProps extends Omit<IPopperProps, "offset"> {
+interface IPopoverProps extends Omit<IPopperProps, "offset" | "arrow"> {
   title?: React.ReactNode;
 }
 
@@ -24,50 +24,41 @@ export const Popover = (props: IPopoverProps) => {
     <Popper
       {...rest}
       placement={placement}
-      offset={8}
-      content={({ rect, fixedPlacement, contentRect }) => {
-        return (
-          <div
-            css={[
-              getCss({
-                maxWidth: "276px",
-                minWidth: "128px",
-                borderRadius: "default",
-                border: "1px solid",
-                borderColor: "inputBorder",
-                backgroundColor: "background",
-                position: "relative",
-              }),
-            ]}
-          >
-            {title ? (
-              <div
-                css={[
-                  paddingStyles,
-                  getCss({
-                    background: darkenTheme("background", 0.03),
-                    borderBottom: "1px solid",
-                    borderBottomColor: "inputBorder",
-                    borderTopRightRadius: "default",
-                    borderTopLeftRadius: "default",
-                    overflow: "hidden",
-                  }),
-                ]}
-              >
-                {title}
-              </div>
-            ) : null}
-            <div css={[paddingStyles]}>{content}</div>
-            {contentRect && (
-              <Triangle
-                rect={rect}
-                placement={fixedPlacement}
-                contentRect={contentRect}
-              />
-            )}
-          </div>
-        );
-      }}
+      arrow={{ borderColor: "inputBorder", backgroundColor: "background" }}
+      content={
+        <div
+          css={[
+            getCss({
+              maxWidth: "276px",
+              minWidth: "128px",
+              borderRadius: "default",
+              border: "1px solid",
+              borderColor: "inputBorder",
+              backgroundColor: "background",
+              position: "relative",
+            }),
+          ]}
+        >
+          {title ? (
+            <div
+              css={[
+                paddingStyles,
+                getCss({
+                  background: darkenTheme("background", 0.03),
+                  borderBottom: "1px solid",
+                  borderBottomColor: "inputBorder",
+                  borderTopRightRadius: "default",
+                  borderTopLeftRadius: "default",
+                  overflow: "hidden",
+                }),
+              ]}
+            >
+              {title}
+            </div>
+          ) : null}
+          <div css={[paddingStyles]}>{content}</div>
+        </div>
+      }
     />
   );
 };

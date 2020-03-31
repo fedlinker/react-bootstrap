@@ -4,7 +4,7 @@ import { Popper, IPopperProps } from "../popper";
 import { jsx, getCss } from "../theme";
 
 export interface ITooltipProps
-  extends Omit<IPopperProps, "modifiers" | "arrowStyle"> {}
+  extends Omit<IPopperProps, "modifiers" | "arrow"> {}
 
 export const Tooltip = (props: ITooltipProps) => {
   const { content, placement, ...rest } = props;
