@@ -9,18 +9,9 @@ import {
 } from "../utils/colors";
 import { rotate } from "../utils/keyframes";
 import { getCss } from "../theme";
-import { ISizeType } from "../enum/size";
+import { ISizeType, IThemeType } from "../enum";
 
-export enum EButtonType {
-  primary = "primary",
-  success = "success",
-  warning = "warning",
-  danger = "danger",
-  info = "info",
-  light = "light",
-  dark = "dark",
-}
-export type IButtonTypeKey = keyof typeof EButtonType;
+export type IButtonTypeKey = IThemeType;
 export type IButtonSizeKey = ISizeType;
 
 export interface IButtonProps
