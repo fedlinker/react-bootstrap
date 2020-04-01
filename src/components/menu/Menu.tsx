@@ -17,6 +17,19 @@ export interface IMenuProps {
   onClick?(path: string): void;
 }
 
+export const baseMenuStyles = getCss({
+  display: "inline-block",
+  color: "text",
+  fontSize: 2,
+  backgroundColor: "background",
+  paddingTop: 2,
+  paddingBottom: 2,
+  border: "1px solid",
+  borderColor: transparentizeTheme("text", 0.85),
+  borderRadius: "default",
+  minWidth: "10rem",
+});
+
 export const Menu: FC<IMenuProps> = props => {
   const { style, onClick, children } = props;
   const [baseProps] = useState({ level: 0 });
@@ -27,23 +40,7 @@ export const Menu: FC<IMenuProps> = props => {
 
   return (
     <MenuContext.Provider value={{ open, setOpen, onClick: handleClick }}>
-      <div
-        css={[
-          getCss({
-            display: "inline-block",
-            color: "text",
-            fontSize: 2,
-            backgroundColor: "background",
-            paddingTop: 2,
-            paddingBottom: 2,
-            border: "1px solid",
-            borderColor: transparentizeTheme("text", 0.85),
-            borderRadius: "default",
-            minWidth: "10rem",
-          }),
-          style,
-        ]}
-      >
+      <div css={[baseMenuStyles, style]}>
         {map(
           Array.isArray(children) ? children : [children],
           (c: IMenuChildType, i) => {

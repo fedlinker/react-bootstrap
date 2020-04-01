@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React from "react";
 import { jsx, getCss } from "../theme";
-import { darkenTheme } from "../utils/colors";
+import { darkenTheme, textColorTheme } from "../utils/colors";
 import { MenuContext } from "./menu-context";
 
 export interface IMenuItemProps {
@@ -25,9 +25,13 @@ export const baseMenuItemStyle = getCss({
   clear: "both",
   textAlign: "inherit",
   backgroundColor: "transparent",
+  minWidth: "5rem",
   "&:hover": {
     color: darkenTheme("text", 0.05),
     backgroundColor: "light",
+  },
+  "&:active": {
+    backgroundColor: darkenTheme("light", 0.05),
   },
 });
 

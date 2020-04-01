@@ -3,12 +3,12 @@ import React from "react";
 import { jsx, getCss } from "../theme";
 import { SolidAngleDown } from "@fedlinker/font-awesome";
 import { baseMenuItemStyle } from "./MenuItem";
-import { useRefRect } from "../hooks";
+// import { useRefRect } from "../hooks";
 // import { animated, useSpring } from "react-spring";
 import { Popper } from "../popper";
 import { transparentizeTheme } from "../utils/colors";
 import { MenuContext } from "./menu-context";
-import { IMenuChildType } from "./Menu";
+import { IMenuChildType, baseMenuStyles } from "./Menu";
 import map from "lodash/map";
 
 export interface ISubMenuProps {
@@ -24,7 +24,7 @@ export const SubMenu: React.FC<ISubMenuProps> = props => {
   const [collapse, setCollapse] = React.useState<boolean>(defaultCollapse!);
   const [open, setOpen] = React.useState<boolean>(false);
   const childrenRef = React.useRef<HTMLDivElement>(null);
-  const childrenRect = useRefRect(childrenRef, [collapse]);
+  // const childrenRect = useRefRect(childrenRef, [collapse]);
 
   const ctx = React.useContext(MenuContext);
 
@@ -88,13 +88,12 @@ export const SubMenu: React.FC<ISubMenuProps> = props => {
     <Popper
       content={
         <div
-          css={getCss({
-            border: "1px solid",
-            borderColor: transparentizeTheme("text", 0.85),
-            borderRadius: "default",
-            boxShadow: t => `0 0 3px ${t.colors.light}`,
-            overflow: "hidden",
-          })}
+          css={[
+            getCss({
+              boxShadow: t => `0 0 3px ${t.colors.light}`,
+            }),
+            baseMenuStyles,
+          ]}
         >
           {menuItems}
         </div>
