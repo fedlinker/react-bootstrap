@@ -6,7 +6,7 @@ import { baseMenuItemStyle } from "./MenuItem";
 // import { useRefRect } from "../hooks";
 // import { animated, useSpring } from "react-spring";
 import { Popper } from "../popper";
-import { transparentizeTheme } from "../utils/colors";
+import { transparentize } from "polished";
 import { MenuContext } from "./menu-context";
 import { IMenuChildType, baseMenuStyles } from "./Menu";
 import map from "lodash/map";
@@ -90,7 +90,7 @@ export const SubMenu: React.FC<ISubMenuProps> = props => {
         <div
           css={[
             getCss({
-              boxShadow: t => `0 0 3px ${t.colors.light}`,
+              boxShadow: t => `0 0 6px ${transparentize(0.9)(t.colors.text)}`,
             }),
             baseMenuStyles,
           ]}

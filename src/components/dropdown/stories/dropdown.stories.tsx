@@ -117,3 +117,29 @@ export const TypeUsage = () => {
     </div>
   );
 };
+
+export const HasArrow = () => {
+  const menus = (
+    <>
+      <MenuItem path="1">1</MenuItem>
+      <MenuItem path="2">2</MenuItem>
+      <SubMenu mode="pop" title="3">
+        <MenuItem path="3-1">3-1</MenuItem>
+      </SubMenu>
+    </>
+  );
+  return (
+    <div>
+      <div style={{ marginBottom: "16px" }}>
+        <Dropdown hasArrow content={menus}>
+          arrow (placement is default)
+        </Dropdown>
+      </div>
+      <div style={{ marginBottom: "16px" }}>
+        <Dropdown hasArrow content={menus} placement="bottom">
+          arrow (placement is bottom)
+        </Dropdown>
+      </div>
+    </div>
+  );
+};
