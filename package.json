@@ -10,8 +10,14 @@
     "storybook": "start-storybook",
     "gen-changelog": "npm run changelog && git add . && git commit -m 'docs(changelog): update CHANGELOG.md' && git push && git push --tags",
     "changelog": "conventional-changelog -n ./node_modules/@codoonfxd/changelog-config/index.js -i CHANGELOG.md -s -r 0",
+    "commit": "git-cz",
     "test": "jest",
     "type-check": "tsc -p ./tsconfig.json --noEmit"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "repository": {
     "type": "git",
@@ -79,6 +85,7 @@
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
     "babel-preset-react-app": "^9.1.1",
+    "commitizen": "^4.0.3",
     "commitlint": "^8.3.4",
     "conventional-changelog-cli": "^2.0.31",
     "csstype": "^2.6.9",
