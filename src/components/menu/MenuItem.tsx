@@ -7,8 +7,9 @@ import { MenuContext } from "./menu-context";
 export interface IMenuItemProps {
   path: string;
   level?: number;
-  onClick?(path: string): void;
   children?: React.ReactNode;
+  disabled?: boolean;
+  onClick?(path: string): void;
 }
 
 export const baseMenuItemStyle = getCss({
@@ -35,8 +36,8 @@ export const baseMenuItemStyle = getCss({
   },
 });
 
-export const MenuItem: React.SFC<IMenuItemProps> = props => {
-  const { children, path, onClick, level } = props;
+export const MenuItem: React.FC<IMenuItemProps> = props => {
+  const { children, path, onClick, level, disabled } = props;
   const ctx = React.useContext(MenuContext);
 
   return (
@@ -45,9 +46,25 @@ export const MenuItem: React.SFC<IMenuItemProps> = props => {
         baseMenuItemStyle,
         getCss({
           paddingLeft: t => `calc(${t.space[6] || 0} + ${0.75 * level!}rem)`,
+          ...(disabled
+            ? {
+                color: "secondary",
+                cursor: "not-allowed",
+                "&:hover": {
+                  color: "secondary",
+                  backgroundColor: "background",
+                },
+                "&:active": {
+                  backgroundColor: "background",
+                },
+              }
+            : {}),
         }),
       ]}
       onClick={() => {
+        if (disabled) {
+          return;
+        }
         onClick && onClick(path);
         ctx.setOpen && ctx.setOpen(false);
         ctx.onClick && ctx.onClick(path);
@@ -60,4 +77,5 @@ export const MenuItem: React.SFC<IMenuItemProps> = props => {
 
 MenuItem.defaultProps = {
   level: 1,
+  disabled: false,
 };

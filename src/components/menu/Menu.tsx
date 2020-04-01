@@ -6,9 +6,10 @@ import { transparentizeTheme } from "../utils/colors";
 import { MenuContext } from "./menu-context";
 import { IMenuItemProps } from "./MenuItem";
 import { ISubMenuProps } from "./SubMenu";
+import { MenuDivider } from "./menu-divider";
 
 export type IMenuChildType = FunctionComponentElement<
-  IMenuItemProps | ISubMenuProps
+  IMenuItemProps | ISubMenuProps | typeof MenuDivider
 >;
 
 export interface IMenuProps {

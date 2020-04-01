@@ -4,6 +4,7 @@ import { MenuItem } from "../MenuItem";
 import { SubMenu } from "../SubMenu";
 import { Popper } from "../../popper";
 import { Button } from "../../button";
+import { MenuDivider } from "../menu-divider";
 
 export default {
   title: "Menu",
@@ -19,7 +20,9 @@ export const BasicUsage = () => {
         </SubMenu>
         <SubMenu title="submenu2">
           <MenuItem path="sub-2-1">sub-2-1</MenuItem>
-          <MenuItem path="sub-2-2">sub-2-2</MenuItem>
+          <MenuItem path="sub-2-2" disabled>
+            sub-2-2
+          </MenuItem>
           <SubMenu title="submenu2-2">
             <MenuItem path="sub-2-3-1">sub-2-3-1</MenuItem>
             <MenuItem path="sub-2-3-2">sub-2-3-2</MenuItem>
@@ -72,6 +75,7 @@ export const PopperMenu = () => {
             <SubMenu title="submenu2" mode="pop">
               <MenuItem path="sub-2-1">sub-2-1</MenuItem>
               <MenuItem path="sub-2-2">sub-2-2</MenuItem>
+              <MenuDivider />
               <SubMenu title="submenu2-2" mode="pop">
                 <MenuItem path="sub-2-3-1">sub-2-3-1</MenuItem>
                 <MenuItem path="sub-2-3-2">sub-2-3-2</MenuItem>
