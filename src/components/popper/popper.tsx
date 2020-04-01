@@ -28,6 +28,11 @@ export interface IPopperLifeCycleProps {
 }
 
 type IColorType = string | FunctionInterpolation<ITheme>;
+export type IPopperChildrenRenderType<T = any> =
+  | React.ReactElement
+  | ((renderProps: {
+      ref: React.MutableRefObject<T | null>;
+    }) => React.ReactNode);
 
 export interface IPopperProps extends IPopperLifeCycleProps {
   isOpen?: boolean;
@@ -48,7 +53,7 @@ export interface IPopperProps extends IPopperLifeCycleProps {
   /**
    * trigger component node.
    */
-  children: React.ReactNode;
+  children: IPopperChildrenRenderType;
   /**
    * show and hide animation delay durations.
    */
@@ -87,7 +92,7 @@ export interface IPopperProps extends IPopperLifeCycleProps {
 
 const DEFAULT_ANIMATION_DURATION = 200;
 
-export const Popper: React.SFC<IPopperProps> = props => {
+export const Popper = (props: IPopperProps) => {
   const {
     placement,
     content,
@@ -113,11 +118,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   const [visible, setVisible] = React.useState(defaultIsOpen!);
   const [mount, setMount] = React.useState(defaultIsOpen!);
-  const { popper, reference } = usePopper<
-    HTMLElement,
-    HTMLDivElement,
-    HTMLDivElement
-  >(
+  const { popper, reference } = usePopper<any, HTMLDivElement, HTMLDivElement>(
     {
       placement: placement!,
       strategy: "absolute",
@@ -161,7 +162,7 @@ export const Popper: React.SFC<IPopperProps> = props => {
     const d = chEl?.ownerDocument?.documentElement || document.documentElement;
 
     const handleTriggerEvent = (e: Event) => {
-      if (!(e.target instanceof HTMLElement)) {
+      if (!(e.target instanceof Element)) {
         return;
       }
       // true: the event target is contained in content or children.
@@ -349,8 +350,10 @@ export const Popper: React.SFC<IPopperProps> = props => {
 
   return (
     <React.Fragment>
-      {React.isValidElement(children)
-        ? React.cloneElement(children, { ref: reference })
+      {typeof children === "function"
+        ? children({ ref: reference })
+        : React.isValidElement(children)
+        ? React.cloneElement(children as React.ReactElement, { ref: reference })
         : null}
       {mount && (
         <WrapperComp>

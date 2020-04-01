@@ -1,6 +1,6 @@
 import React from "react";
 import { Popper } from "../popper";
-import { Button } from "../../button";
+import { Button, ButtonGroup } from "../../button";
 import times from "lodash/times";
 import { boolean } from "@storybook/addon-knobs";
 
@@ -340,5 +340,20 @@ export const ConstrolledPopper = () => {
         </Button>
       </div>
     </div>
+  );
+};
+
+export const RenderPropsChildren = () => {
+  return (
+    <Popper content="popper content">
+      {({ ref }) => {
+        return (
+          <ButtonGroup>
+            <Button>Text</Button>
+            <Button ref={ref}>Triger</Button>
+          </ButtonGroup>
+        );
+      }}
+    </Popper>
   );
 };

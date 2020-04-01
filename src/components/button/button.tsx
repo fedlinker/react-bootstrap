@@ -143,6 +143,7 @@ export const Button = forwardRef<
       paddingTop: isLg ? 2 : isSm ? 1 : 2,
       paddingBottom: isLg ? 2 : isSm ? 1 : 2,
       fontSize: isLg ? 3 : isSm ? 1 : 2,
+      minHeight: isLg ? "2.875rem" : isSm ? "1.9125rem" : "2.25rem",
     });
   }, [size]);
 

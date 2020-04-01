@@ -1,5 +1,5 @@
 import React from "react";
-import { Popper } from "../popper";
+import { Popper, IPopperChildrenRenderType } from "../popper";
 import { Menu, IMenuChildType } from "../menu";
 import { Placement } from "@popperjs/core";
 
@@ -9,7 +9,7 @@ export interface IDropdownBaseShareProps {
   onClick?(path: string): void;
 }
 export interface IDropdownBaseProps extends IDropdownBaseShareProps {
-  children: React.ReactNode;
+  children: IPopperChildrenRenderType;
 }
 
 export const DropdownBase: React.FC<IDropdownBaseProps> = props => {
