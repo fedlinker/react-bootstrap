@@ -6,21 +6,24 @@ import { Radio, IRadioProps } from "./radio";
 import { ArrayOrObject } from "../utils/type-utils";
 
 export type IRadioValue = string | number;
-export interface IOptionFieldType {
+export interface IOptionFieldType<V = IRadioValue> {
   label: string;
-  value: IRadioValue;
+  value: V;
 }
-export type IRadioElementType = React.FunctionComponentElement<IRadioProps>;
+export type IRadioElementType<
+  V extends IRadioValue = IRadioValue
+> = React.FunctionComponentElement<IRadioProps<V>>;
 
-export interface IRadioGroupProps {
-  value?: IRadioValue;
-  options?: IOptionFieldType[];
-  inline?: boolean;
-  onChange?(value: IRadioValue): void;
-  children?: ArrayOrObject<IRadioElementType>;
-  name?: string;
+export interface IRadioGroupProps<V extends IRadioValue = IRadioValue> {
+  children?: ArrayOrObject<IRadioElementType<V>>;
+  defaultValue?: V;
   disabled?: boolean;
-  defaultValue?: IRadioValue;
+  options?: IOptionFieldType<V>[];
+  inline?: boolean;
+  name?: string;
+  forwardRef?: React.Ref<any>;
+  value?: V;
+  onChange?(value: V): void;
 }
 
 let count = 0;
@@ -28,75 +31,82 @@ function getName() {
   return `bs-radio-${count++}`;
 }
 
-export const RadioGroup = React.forwardRef<HTMLDivElement, IRadioGroupProps>(
-  (props, ref) => {
-    const {
-      value,
-      options,
-      inline,
-      onChange,
-      children,
-      name,
-      defaultValue,
-    } = props;
-    const [innerValue, setInnerValue] = React.useState<IRadioValue | undefined>(
-      value || defaultValue
-    );
+export const RadioGroup = <V extends IRadioValue = IRadioValue>(
+  props: IRadioGroupProps<V>
+) => {
+  const { forwardRef, ...rest } = props;
+  const InnerRadioGroup = React.forwardRef<HTMLDivElement, IRadioGroupProps<V>>(
+    (props, ref) => {
+      const {
+        value,
+        options,
+        inline,
+        onChange,
+        children,
+        name,
+        defaultValue,
+      } = props;
+      const [innerValue, setInnerValue] = React.useState<
+        IRadioValue | undefined
+      >(value || defaultValue);
 
-    const innerName = React.useMemo(() => {
-      return name || getName();
-    }, [name]);
+      const innerName = React.useMemo(() => {
+        return name || getName();
+      }, [name]);
 
-    const realValue = React.useMemo(() => {
-      return value == null ? innerValue : value;
-    }, [value, innerValue]);
+      const realValue = React.useMemo(() => {
+        return value == null ? innerValue : value;
+      }, [value, innerValue]);
 
-    const handleValueChange = (val: IRadioValue) => {
-      onChange && onChange(val);
-      setInnerValue(val);
-    };
+      const handleValueChange = (val: V) => {
+        onChange && onChange(val);
+        setInnerValue(val);
+      };
 
-    // sync innerValue
-    React.useEffect(() => {
-      if (value != null) {
-        setInnerValue(value);
-      }
-    }, [value]);
+      // sync innerValue
+      React.useEffect(() => {
+        if (value != null) {
+          setInnerValue(value);
+        }
+      }, [value]);
 
-    const renderOptionsRadio = () => {
-      return map(options, opt => {
-        return (
-          <Radio
-            value={opt.value}
-            label={opt.label}
-            inline={inline}
-            onChange={handleValueChange}
-            checked={realValue === opt.value}
-            name={innerName}
-            key={opt.value}
-          />
-        );
-      });
-    };
+      const renderOptionsRadio = () => {
+        return map(options, opt => {
+          return (
+            <Radio<V>
+              value={opt.value}
+              label={opt.label}
+              inline={inline}
+              onChange={handleValueChange}
+              checked={realValue === opt.value}
+              name={innerName}
+              key={opt.value}
+            />
+          );
+        });
+      };
 
-    return (
-      <div ref={ref}>
-        {options == null && children
-          ? React.Children.map(children, (ch: IRadioElementType) => {
-              const { onChange, disabled, value } = ch.props;
-              return React.cloneElement(ch, {
-                inline,
-                onChange: (val: IRadioValue) => {
-                  handleValueChange(val);
-                  onChange && onChange(val);
-                },
-                name: innerName,
-                disabled: disabled || props.disabled,
-                checked: realValue === value,
-              });
-            })
-          : renderOptionsRadio()}
-      </div>
-    );
-  }
-);
+      return (
+        <div ref={ref}>
+          {options == null && children
+            ? React.Children.map(children, (ch: IRadioElementType<V>) => {
+                const { onChange, disabled, value, ...rest } = ch.props;
+                return React.cloneElement<IRadioProps<V>>(ch, {
+                  ...rest,
+                  inline,
+                  onChange: (val: V) => {
+                    handleValueChange(val);
+                    onChange && onChange(val);
+                  },
+                  name: innerName,
+                  disabled: disabled || props.disabled,
+                  checked: realValue === value,
+                });
+              })
+            : renderOptionsRadio()}
+        </div>
+      );
+    }
+  );
+  return <InnerRadioGroup ref={forwardRef} {...rest} />;
+};

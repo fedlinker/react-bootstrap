@@ -10,14 +10,14 @@ export const BasicUsage = () => {
   return (
     <div>
       <div>Use options:</div>
-      <RadioGroup
+      <RadioGroup<"one" | "two">
         options={[
           { label: "one", value: "one" },
           { label: "two", value: "two" },
         ]}
       />
       <div>Use jsx:</div>
-      <RadioGroup>
+      <RadioGroup<"jane">>
         <Radio label="Jane" value="jane" />
         <Radio label="Jeffery" value="jeffery" />
       </RadioGroup>
@@ -45,9 +45,10 @@ export const DefaultValue = () => {
 
 export const Disabled = () => {
   return (
-    <RadioGroup inline>
+    <RadioGroup<"jane" | "asd111"> defaultValue="jane" inline>
       <Radio label="Jane" value="jane" disabled />
       <Radio label="Jeffery" value="jeffery" />
+      <Radio label="asd" value="" />
     </RadioGroup>
   );
 };

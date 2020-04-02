@@ -6,14 +6,15 @@ import { useSpring, animated } from "react-spring";
 import { transparentizeTheme } from "../utils/colors";
 import { easeCubicOut } from "d3-ease";
 
-export interface IRadioProps {
-  onChange?(value: IRadioValue): void;
+export interface IRadioProps<V extends IRadioValue = IRadioValue> {
+  onChange?(value: V): void;
   label: string;
-  value: IRadioValue;
+  value: V;
   checked?: boolean;
   name?: string;
   inline?: boolean;
   disabled?: boolean;
+  forwardRef?: React.Ref<any>;
 }
 
 const RadioIcon = (props: { checked?: boolean; size?: string | number }) => {
@@ -64,62 +65,69 @@ const RadioIcon = (props: { checked?: boolean; size?: string | number }) => {
   );
 };
 
-export const Radio = React.forwardRef<HTMLLabelElement, IRadioProps>(
-  (props, ref) => {
-    const { label, value, checked, onChange, name, inline, disabled } = props;
-    return (
-      <label
-        ref={ref}
-        css={getCss({
-          position: "relative",
-          backgroundColor: "background",
-          transition: "all 0.3s",
-          color: "text",
-          display: inline ? "inline-flex" : "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingTop: 2,
-          paddingBottom: 2,
-          paddingLeft: 3,
-          paddingRight: 3,
-          cursor: disabled ? "not-allowed" : "pointer",
-          ...(disabled
-            ? {}
-            : {
-                "&:active": {
-                  "& > #bs-radio-icon": {
-                    boxShadow: "0 0 4px #999 inset",
+export const Radio = <V extends IRadioValue = IRadioValue>(
+  props: IRadioProps<V>
+) => {
+  const { forwardRef, ...rest } = props;
+  const Comp = React.forwardRef(
+    (props: IRadioProps<V>, ref?: React.Ref<HTMLLabelElement>) => {
+      const { label, value, checked, onChange, name, inline, disabled } = props;
+      return (
+        <label
+          ref={ref}
+          css={getCss({
+            position: "relative",
+            backgroundColor: "background",
+            transition: "all 0.3s",
+            color: "text",
+            display: inline ? "inline-flex" : "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            paddingTop: 2,
+            paddingBottom: 2,
+            paddingLeft: 3,
+            paddingRight: 3,
+            cursor: disabled ? "not-allowed" : "pointer",
+            ...(disabled
+              ? {}
+              : {
+                  "&:active": {
+                    "& > #bs-radio-icon": {
+                      boxShadow: "0 0 4px #999 inset",
+                    },
                   },
-                },
-                "&:hover": {
-                  color: transparentizeTheme("text", 0.3),
-                },
-              }),
-          opacity: disabled ? 0.7 : 1,
-        })}
-      >
-        <RadioIcon checked={disabled ? false : checked} />
-        {label}
-        <input
-          type="radio"
-          name={name}
-          onChange={e => {
-            if (!checked && e.target.checked && !disabled) {
-              onChange && onChange(value);
-            }
-          }}
-          css={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: -1,
-            opacity: 0,
-          }}
-        />
-      </label>
-    );
-  }
-);
+                  "&:hover": {
+                    color: transparentizeTheme("text", 0.3),
+                  },
+                }),
+            opacity: disabled ? 0.7 : 1,
+          })}
+        >
+          <RadioIcon checked={checked} />
+          {label}
+          <input
+            type="radio"
+            name={name}
+            onChange={e => {
+              if (!checked && e.target.checked && !disabled) {
+                onChange && onChange(value);
+              }
+            }}
+            css={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: -1,
+              opacity: 0,
+            }}
+          />
+        </label>
+      );
+    }
+  );
+  Comp.displayName = "RadioInner";
+  return <Comp ref={forwardRef} {...rest} />;
+};
 
 Radio.defaultProps = {
   inline: false,
