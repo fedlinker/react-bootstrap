@@ -18,7 +18,8 @@ import {
   math,
 } from "polished";
 import { get } from "@styled-system/css";
-import { BASE_COLORS, ITheme, CONSTANT } from "../theme";
+import { BASE_COLORS, ITheme } from "../theme";
+import { THEME_COLOR_INTERVAL } from "../theme/constant";
 
 const g = (t: ITheme, c: string) => {
   return get(t, `colors.${c}`, c)
@@ -60,11 +61,7 @@ export const mixTheme = (a: string, b: string, n = 0.5) => (t: ITheme) =>
 
 export const themeColorLevel = (c: string, level = 0) => (t: ITheme) => {
   const baseColor = level > 0 ? BASE_COLORS.black : BASE_COLORS.white;
-  return mix(
-    Math.abs(level * CONSTANT.THEME_COLOR_INTERVAL),
-    baseColor,
-    g(t, c)
-  );
+  return mix(Math.abs(level * THEME_COLOR_INTERVAL), baseColor, g(t, c));
 };
 
 export const complementTheme = (c: string) => (t: ITheme) => {

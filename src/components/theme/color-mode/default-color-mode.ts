@@ -21,6 +21,8 @@ export interface IColorMode {
   input: string;
   inputBorder: string;
   placeholder: string;
+
+  borderColor: string;
 }
 
 export type IColorsType = IColorMode & {
@@ -46,6 +48,7 @@ export const DEFAULT_COLOR_MODE: IColorsType = {
   input: BASE_COLORS.gray700,
   inputBorder: BASE_COLORS.gray400,
   placeholder: BASE_COLORS.gray600,
+  borderColor: BASE_COLORS.gray300,
   modes: {
     dark: {
       text: BASE_COLORS.white,
@@ -62,6 +65,7 @@ export const DEFAULT_COLOR_MODE: IColorsType = {
       input: BASE_COLORS.gray700,
       inputBorder: dark(BASE_COLORS.gray400),
       placeholder: dark(BASE_COLORS.gray600),
+      borderColor: dark(BASE_COLORS.gray300),
     },
   },
 };
