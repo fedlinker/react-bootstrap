@@ -50,21 +50,3 @@ export function NestedCollapse() {
     </div>
   );
 }
-
-export const Demo = () => {
-  const [a, setA] = React.useState("");
-  const [b, setB] = React.useState("");
-
-  React.useEffect(() => {
-    console.log(a);
-  }, [b]);
-
-  React.useEffect(() => {
-    setA("222");
-    setTimeout(() => {
-      setB("111");
-    }, 1000);
-  }, []);
-
-  return 111;
-};
