@@ -4,7 +4,7 @@ import { Portal } from "../portal";
 import { jsx, Interpolation, getCss } from "../theme";
 import { getScrollbarWidth } from "../utils/getScrollbarWidth";
 import { animated, useSpring } from "react-spring";
-import { easeBackOut } from "d3-ease";
+import { easeExpOut } from "d3-ease";
 import { Global } from "@emotion/react";
 
 export interface IModalBaseProps {
@@ -27,7 +27,7 @@ export interface IModalBaseProps {
   onExited?(): void;
 }
 
-const DURATION_TIME = 300;
+const DURATION_TIME = 500;
 
 export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
   (props, ref) => {
@@ -62,7 +62,7 @@ export const ModalBase = React.forwardRef<HTMLDivElement, IModalBaseProps>(
         : "translate3d(-50%, -100%, 0)",
       config: {
         duration: DURATION_TIME,
-        easing: easeBackOut,
+        easing: easeExpOut,
       },
     });
 
