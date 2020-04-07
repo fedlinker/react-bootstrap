@@ -46,6 +46,7 @@ export interface ICardBaseProps {
 
 export interface ICardProps extends ICardBaseProps {
   title?: string | ReactNode;
+  subTitle?: string | ReactNode;
   content?: string | ReactNode;
 }
 
@@ -56,13 +57,15 @@ export const Card: FunctionComponent<ICardProps> = ({
   cover,
   style,
   title,
+  subTitle,
   content,
 }) => {
   return (
     <div css={[cardStyle, style]}>
       <CardPoster>{cover}</CardPoster>
       <div css={[cardBodyStyle]}>
-        <h3>{title}</h3>
+        {title && <h3>{title}</h3>}
+        {subTitle && <h4>{subTitle}</h4>}
         <p>{content}</p>
       </div>
     </div>
