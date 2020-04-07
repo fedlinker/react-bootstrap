@@ -53,7 +53,7 @@ export interface ICardProps extends ICardBaseProps {
 const CardPoster: FunctionComponent<ICardBaseProps> = ({ children, style }) =>
   children ? <div css={[cardCoverStyle, style]}>{children}</div> : <Fragment />;
 
-const Card: FunctionComponent<ICardProps> = ({
+export const Card: FunctionComponent<ICardProps> = ({
   cover,
   style,
   title,
