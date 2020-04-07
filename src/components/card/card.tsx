@@ -10,7 +10,7 @@ import { getCss, jsx, BASE_COLORS, Interpolation } from "../theme";
 import { BORDER_WIDTH, BORDER_RADIUS } from "../theme/constant";
 import { CARD_SPACER_X } from "./styleVariables";
 
-export const cardStyle = getCss({
+const cardStyle = getCss({
   position: "relative",
   display: "flex",
   flexDirection: "column",
@@ -19,13 +19,13 @@ export const cardStyle = getCss({
   wordWrap: "break-word",
   backgroundColor: BASE_COLORS.white,
   backgroundClip: "border-box",
-  borderColor: "borderColor",
+  borderColor: "border",
   borderStyle: "solid",
   borderWidth: `${BORDER_WIDTH}`,
   borderRadius: BORDER_RADIUS,
 });
 
-export const cardCoverStyle = getCss({
+const cardCoverStyle = getCss({
   flexShrink: 0,
   width: "100%",
   "& > img": {
@@ -33,7 +33,7 @@ export const cardCoverStyle = getCss({
   },
 });
 
-export const cardBodyStyle = getCss({
+const cardBodyStyle = getCss({
   flex: "1 1 auto",
   minHeight: "1px",
   padding: CARD_SPACER_X,
@@ -53,7 +53,7 @@ export interface ICardProps extends ICardBaseProps {
 const CardPoster: FunctionComponent<ICardBaseProps> = ({ children, style }) =>
   children ? <div css={[cardCoverStyle, style]}>{children}</div> : <Fragment />;
 
-export const Card: FunctionComponent<ICardProps> = ({
+const Card: FunctionComponent<ICardProps> = ({
   cover,
   style,
   title,
