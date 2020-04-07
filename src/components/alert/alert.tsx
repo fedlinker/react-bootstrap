@@ -2,7 +2,7 @@
 import React, { useMemo, FunctionComponent, useState, Fragment } from "react";
 import { getCss, jsx } from "../theme";
 import { themeColorLevel } from "../utils/colors";
-import { CONSTANT } from "../theme";
+import { FONT_WEIGHT_BOLD } from "../theme/constant";
 import { animated, useTransition } from "react-spring";
 import {
   ALERT_BG_LEVEL,
@@ -131,7 +131,7 @@ export const AlertLink: FunctionComponent<IAlertLinkProps> = props => {
   const { children } = props;
   const baseStyles = useMemo(() => {
     return getCss({
-      fontWeight: CONSTANT.FONT_WEIGHT_BOLD,
+      fontWeight: FONT_WEIGHT_BOLD,
     });
   }, [children]);
 
