@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "./index";
-import { width } from "styled-system";
 
 export default {
   title: "Card",
+  component: Card,
 };
 
 export const BasicUsage = () => (

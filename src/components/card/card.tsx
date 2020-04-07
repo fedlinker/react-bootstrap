@@ -45,9 +45,9 @@ export interface ICardBaseProps {
 }
 
 export interface ICardProps extends ICardBaseProps {
-  title?: string | ReactNode;
-  subTitle?: string | ReactNode;
-  content?: string | ReactNode;
+  title?: ReactNode;
+  subTitle?: ReactNode;
+  content?: ReactNode;
 }
 
 const CardPoster: FunctionComponent<ICardBaseProps> = ({ children, style }) =>
