@@ -3,6 +3,7 @@ import React, { useMemo, FunctionComponent, useState, useEffect } from "react";
 import { getCss, jsx } from "../theme";
 import { animated, useTransition } from "react-spring";
 import NavigationControl from "./navigationControl";
+import Indicators from "./indicators";
 
 const carouselStyle = getCss({
   position: "relative",
@@ -15,14 +16,16 @@ const carouselStyle = getCss({
 export interface ICarouselProps {
   style?: "Interpolation";
   defaultActiveIndex?: number;
-  navigationControl?: boolean;
+  enableNavigationControl?: boolean;
+  enableIndicators?: boolean;
 }
 
 const timerSequence: number[] = [];
 export const Carousel: FunctionComponent<ICarouselProps> = ({
   children,
-  navigationControl,
+  enableNavigationControl,
   style,
+  enableIndicators,
 }) => {
   const [index, setIndex] = useState(0);
   const slideTransitions = useTransition(index, null, {
@@ -57,7 +60,7 @@ export const Carousel: FunctionComponent<ICarouselProps> = ({
             )
         )
       )}
-      {navigationControl && (
+      {enableNavigationControl && (
         <NavigationControl
           onLeftArrowClick={() => {
             setIndex(index - 1);
@@ -67,6 +70,7 @@ export const Carousel: FunctionComponent<ICarouselProps> = ({
           }}
         />
       )}
+      {enableIndicators && <Indicators count={childrenCount} />}
     </div>
   );
 };

@@ -44,6 +44,7 @@ const NavigationControl: FunctionComponent<INavigationControlProps> = ({
           textDecoration: "none",
           outline: "0",
           opacity: ".9",
+          cursor: "pointer",
         },
       }),
     []
