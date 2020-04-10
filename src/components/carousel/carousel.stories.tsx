@@ -17,7 +17,7 @@ const CarouselItemStyle: Interpolation = {
 };
 
 export const BasicUsage = () => (
-  <Carousel>
+  <Carousel navigationControl>
     {["First", "Second", "Third"].map((name) => (
       <CarouselItem
         key={name}
