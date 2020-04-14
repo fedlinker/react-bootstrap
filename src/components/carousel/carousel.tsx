@@ -18,6 +18,7 @@ export interface ICarouselProps {
   defaultActiveIndex?: number;
   enableNavigationControl?: boolean;
   enableIndicators?: boolean;
+  interval?: number; // millisecond
 }
 
 const timerSequence: number[] = [];
@@ -28,10 +29,17 @@ export const Carousel: FunctionComponent<ICarouselProps> = ({
   enableIndicators,
 }) => {
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState<-1 | 1>(1);
+  const childrenArray = React.Children.toArray(children);
+  const { length: childrenCount } = childrenArray;
+
   const slideTransitions = useTransition(index, null, {
-    from: { opacity: 0.8, transform: "translate3d(100%, 0, 0)" },
+    from: { opacity: 0.8, transform: `translate3d(${direction * 100}%, 0, 0)` },
     enter: { opacity: 1, transform: "translate3d(0%, 0, 0)" },
-    leave: { opacity: 0.8, transform: "translate3d(-100%, 0, 0)" },
+    leave: {
+      opacity: 0.8,
+      transform: `translate3d(${direction * -100}%, 0, 0)`,
+    },
     config: { duration: 650 },
     // unique: true
   });
@@ -41,13 +49,10 @@ export const Carousel: FunctionComponent<ICarouselProps> = ({
       window.clearTimeout(timerSequence.pop());
     }
     const indexTimer = window.setTimeout(() => {
-      setIndex(index + 1);
+      setIndex((index + 1) % childrenCount);
     }, 3500);
     timerSequence.push(indexTimer);
   }, [index]);
-
-  const childrenArray = React.Children.toArray(children);
-  const { length: childrenCount } = childrenArray;
   return (
     <div css={[carouselStyle, style]}>
       {slideTransitions.map(({ item, key, props }) =>
@@ -64,13 +69,22 @@ export const Carousel: FunctionComponent<ICarouselProps> = ({
         <NavigationControl
           onLeftArrowClick={() => {
             setIndex(index - 1);
+            setDirection(-1);
           }}
           onRightArrowClick={() => {
             setIndex(index + 1);
+            setDirection(1);
           }}
         />
       )}
-      {enableIndicators && <Indicators count={childrenCount} />}
+      {enableIndicators && (
+        <Indicators
+          count={childrenCount}
+          activeIndex={index}
+          controlActiveTab={setIndex}
+          controlDirection={setDirection}
+        />
+      )}
     </div>
   );
 };

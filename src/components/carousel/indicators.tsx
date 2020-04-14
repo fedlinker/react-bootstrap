@@ -46,17 +46,39 @@ const indicatorsListStyles = getCss({
   boxSizing: "content-box",
 });
 
+const activeStyles = getCss({
+  opacity: "1",
+});
+
 interface IIndicatorsProps {
   count: number;
+  activeIndex: number;
+  controlActiveTab: (index: number) => void;
+  controlDirection: (direction: 1 | -1) => void;
 }
 
-const Indicators: FunctionComponent<IIndicatorsProps> = ({ count }) => {
+const Indicators: FunctionComponent<IIndicatorsProps> = ({
+  count,
+  activeIndex,
+  controlActiveTab,
+  controlDirection,
+}) => {
   const emptyArray = new Array(count).fill(null);
+  const getListStyles = (idx: number) =>
+    activeIndex % count === idx ? activeStyles : {};
   return (
     <ol css={[indicatorsBaseStyles]}>
-      {emptyArray.map(() => (
-        <li css={[indicatorsListStyles]}></li>
-      ))}
+      {emptyArray.map((item, index) => {
+        return (
+          <li
+            css={[indicatorsListStyles, getListStyles(index)]}
+            onClick={() => {
+              controlActiveTab(index);
+              controlDirection(index - activeIndex > 0 ? 1 : -1);
+            }}
+          ></li>
+        );
+      })}
     </ol>
   );
 };
