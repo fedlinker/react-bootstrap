@@ -8,13 +8,18 @@ export const rotate: Keyframes = keyframes`
   0% {
     transform: rotate(0deg);
   }
-  50% {
-    transform: rotate(180deg);
-  }
-  75% {
-    transform: rotate(270deg);
-  }
   100% {
     transform: rotate(360deg);
   }
+`;
+
+export const fadeScaleOut: Keyframes = keyframes`
+ 0% {
+   transform: scale(0);
+   opacity: 1;
+ }
+ 100% {
+   opacity: 0;
+   transform: scale(1);
+ }
 `;
