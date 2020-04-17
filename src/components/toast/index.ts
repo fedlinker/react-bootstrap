@@ -1,2 +1,2 @@
 export * from "./toast";
-export * from "./functional";
+export * from "./toastMethod";

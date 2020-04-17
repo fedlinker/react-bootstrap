@@ -26,15 +26,18 @@ export const ToastWithIcon = () => {
   );
 };
 
+const toastMethod = new ToastMethod({});
 export const ToastByFuntion = () => {
+  let count = 1;
   return (
     <Button
       type="primary"
       onClick={() => {
-        ToastMethod({
+        toastMethod.toast({
           title: "Bootstrap",
-          body: "Hello, world! This is a toast message.",
+          body: `${count}: Hello, world! This is a toast message.`,
         });
+        count++;
       }}
     >
       click to toast
