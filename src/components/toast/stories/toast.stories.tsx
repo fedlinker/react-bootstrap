@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Toast, ToastMethod } from "../index";
 import { SolidBell } from "@fedlinker/font-awesome";
 import { Button } from "../../button";
@@ -41,6 +41,23 @@ export const ToastByFuntion = () => {
       }}
     >
       click to toast
+    </Button>
+  );
+};
+
+export const CloseByFuntion = () => {
+  const toastElement = toastMethod.toast({
+    title: "Bootstrap",
+    body: `Hello, world! This is a toast message.`,
+  });
+  return (
+    <Button
+      type="primary"
+      onClick={() => {
+        toastElement.remove();
+      }}
+    >
+      click to close
     </Button>
   );
 };
